@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container">
+  <h2>Register</h2>
+  <form method="POST">
+    <div class="field">
+      <input type="text" name="fullname" placeholder="Full Name" required>
+    </div>
+    <div class="field">
+      <input type="email" name="email" placeholder="Email" required>
+    </div>
+    <div class="field">
+      <input type="password" name="password" placeholder="Password" minlength="6" required>
+    </div>
+    <div class="field">
+      <input type="password" name="confirm" placeholder="Confirm Password" minlength="6" required>
+    </div>
+    <button class="form-btn" type="submit">Register</button>
+  </form>
+  <p class="swap-text">Already have an account? <a href="{{ url_for('login') }}">Log In</a></p>
+</div>
+{% endblock %}

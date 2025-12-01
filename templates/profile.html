@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="glass-box small-box">
+  <h2 class="title">Welcome, {{ user }}</h2>
+
+  <h3>Add New Task</h3>
+  <form method="POST">
+    <div class="field">
+      <input type="text" name="task" placeholder="Task name" required>
+    </div>
+    <div class="field">
+      <select name="category">
+        <option value="School">School</option>
+        <option value="Personal">Personal</option>
+        <option value="Work">Work</option>
+      </select>
+    </div>
+    <div class="field">
+      <input type="date" name="due_date">
+    </div>
+    <button class="form-btn" type="submit">Add Task</button>
+  </form>
+
+  <h3 style="margin-top:20px">Your Tasks</h3>
+  {% if tasks %}
+    <ul class="task-list">
+      {% for t in tasks %}
+        <li>
+          {% if t['completed'] %}
+            <s>{{ t['name'] }}</s>
+          {% else %}
+            {{ t['name'] }}
+          {% endif %}
+          — {{ t['category'] }} — {{ t['due_date'] }}
+          {% if not t['completed'] %}
+            <a href="{{ url_for('complete_task', task_id=t['id']) }}">Complete</a>
+          {% endif %}
+          <a href="{{ url_for('delete_task', task_id=t['id']) }}">Delete</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No tasks yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard-container">
+
+    <!-- LEFT PANEL -->
+    <div class="dash-left">
+        <h2 class="dash-title">Welcome to Project KALMA 🌿</h2>
+        <p class="dash-sub">Your personal mental wellness companion</p>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="dash-grid">
+
+        <div class="dash-card">
+            <h3>🧠 Mood Tracker</h3>
+            <p>Track your emotional wellness each day.</p>
+            <button class="dash-btn" onclick="openMoodTracker()">Open</button>
+        </div>
+
+        <div class="dash-card">
+            <h3>📝 Tasks</h3>
+            <p>View and manage your tasks.</p>
+            <a href="{{ url_for('profile') }}">
+                <button class="dash-btn">View Tasks</button>
+            </a>
+        </div>
+
+        <div class="dash-card">
+            <h3>📅 Schedule</h3>
+            <p>See events and deadlines in calendar mode.</p>
+            <button class="dash-btn">View Calendar</button>
+        </div>
+
+        <div class="dash-card">
+            <h3>💬 Wellness Tips</h3>
+            <p>Read advice and calming techniques.</p>
+            <button class="dash-btn">Explore</button>
+        </div>
+
+    </div> <!-- end dash-grid -->
+
+</div> <!-- end dashboard-container -->
+
+<!-- MOOD TRACKER MODAL -->
+<div id="moodModal" class="mood-modal">
+    <div class="mood-content">
+        <h2>How are you feeling today? 🌿</h2>
+
+        <div class="mood-options">
+            <button class="mood-btn" data-mood="Happy">😊</button>
+            <button class="mood-btn" data-mood="Calm">😌</button>
+            <button class="mood-btn" data-mood="Stressed">😣</button>
+            <button class="mood-btn" data-mood="Sad">😢</button>
+            <button class="mood-btn" data-mood="Tired">🥱</button>
+        </div>
+
+        <button class="mood-close" onclick="closeMoodTracker()">Close</button>
+    </div>
+</div>
+
+{% endblock %}
+

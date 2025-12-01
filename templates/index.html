@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero-container">
+    <h1 class="hero-title">Welcome to <span>Project KALMA</span></h1>
+    <p class="hero-sub">(Keeping Assistance for Learners’ Mental Awareness)</p>
+    <p class="hero-desc">
+        Your mental wellness web application for BatStateU 2nd-year IT students.<br>
+        Manage tasks, track schedules, and access mental wellness resources all in one place.
+    </p>
+    <a href="{{ url_for('login') }}" class="hero-btn">Get Started</a>
+</div>
+{% endblock %}
