@@ -314,6 +314,85 @@ nav a:hover { text-shadow: 0 0 6px white; }
   align-items: center;
 }
 
+/* DASHBOARD */
+
+.glass-dashboard {
+    width: 900px;
+    max-width: 90%;
+    margin: 100px auto;
+    padding: 50px;
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: 28px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 10px 45px rgba(0,0,0,0.15);
+    text-align: center;
+    animation: fadeIn 0.8s ease;
+}
+
+.dash-welcome {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #c81c1c;
+    margin-bottom: 10px;
+}
+
+.dash-sub {
+    font-size: 1.15rem;
+    opacity: 0.8;
+    margin-bottom: 35px;
+}
+
+.dash-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 25px;
+}
+
+/* DASH CARDS */
+.feature-card {
+    background: rgba(255,255,255,0.85);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    transition: .3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.feature-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #b41414;
+    margin-bottom: 8px;
+}
+
+.feature-card p {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+
+/* BUTTON */
+.feature-btn {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(45deg,#c81c1c,#e65f61);
+    color: white;
+    transition: 0.3s;
+}
+
+.feature-btn:hover {
+    transform: scale(1.07);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
 
 
 
