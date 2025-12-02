@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div class="glass-card mood-top-card">
+    <h3>How are you feeling today? 🌿</h3>
+    <button class="feature-btn" onclick="openMoodTracker()">Track Mood</button>
+</div>
+
+<!--Dashboard-->
 <div class="glass-dashboard">
 
     <h2 class="dash-welcome">Hello, {{ user }} 🌿</h2>
@@ -16,7 +22,7 @@
 
         <div class="feature-card">
             <h3>📝 Tasks</h3>
-            <p>View and manage your tasks.</p>
+            <p>View and manage your tasks here.</p>
             <a href="{{ url_for('profile') }}">
                 <button class="feature-btn">View Tasks</button>
             </a>
@@ -36,6 +42,7 @@
 
     </div>
 </div>
+<!-- END OF DASHBOARD -->
 
 <!-- MOOD TRACKER MODAL -->
 <div id="moodModal" class="mood-modal">
