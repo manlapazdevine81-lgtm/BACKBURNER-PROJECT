@@ -491,4 +491,74 @@ nav a:hover { text-shadow: 0 0 6px white; }
 }
 
 
+.welcome-box .main-title {
+    /* Uses your primary red color */
+    color: #db1919; 
+    font-size: 2.5em; 
+    font-weight: 700; 
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+}
 
+.welcome-box .tagline {
+    font-size: 1.1em;
+    font-style: Poppins, sans-serif;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Ensure the main welcome box doesn't get too wide for a clean look */
+.welcome-box {
+    max-width: 600px; 
+}
+
+.info-section {
+    /* Background for the section after the main card */
+    background-color: white; 
+    padding: 50px 0; 
+    text-align: center;
+    border-top: 1px solid #eee; /* Subtle separation line */
+}
+
+/* Section Heading (Why Mental Wellness Matters) */
+.section-heading {
+    color: #c81c1c; /* Use your button red for the heading */
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+.wellness-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px; 
+    padding: 0 20px;
+    flex-wrap: wrap;
+}
+
+/* Styling for the smaller cards inside the grid (they inherit .box styles) */
+.wellness-card {
+    width: 300px; 
+    text-align: center;
+    transition: transform 0.3s;
+    /* Overrides the original .box margin for proper grid layout */
+    margin: 0; 
+}
+
+.wellness-card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); /* Enhanced hover effect */
+}
+
+.wellness-card img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    color: #db1919; /* Consistent red for card titles */
+    font-size: 1.3em;
+    font-weight: 600;
+    margin-top: 0;
+}

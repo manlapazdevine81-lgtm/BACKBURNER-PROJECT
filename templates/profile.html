@@ -3,9 +3,10 @@
 
 <div class="profile-layout">
 
-    <!-- LEFT SIDE — existing welcome + add task -->
+    <!-- LEFT SIDE — welcome + quote + add task -->
     <div class="glass-box small-box left-box">
         <h2 class="title">Welcome, {{ user }}</h2>
+        <p class="quote">"Stay focused and never give up! Every task completed is progress."</p>
 
         <h3>Add New Task</h3>
         <form method="POST">
@@ -24,11 +25,28 @@
             </div>
             <button class="form-btn" type="submit">Add Task</button>
         </form>
+
+        <!-- Display user’s added tasks -->
+        <h3 style="margin-top: 20px;">Your Tasks</h3>
+        {% if tasks %}
+            <ul class="task-list" id="taskList">
+                {% for t in tasks %}
+                    <li class="{% if t['completed'] %}completed-task{% endif %}">
+                        {{ t['name'] }} — {{ t['category'] }} — {{ t['due_date'] }}
+                        {% if not t['completed'] %}
+                            <a class="task-btn complete" href="{{ url_for('complete_task', task_id=t['id']) }}">Complete</a>
+                        {% endif %}
+                        <a class="task-btn delete" href="{{ url_for('delete_task', task_id=t['id']) }}">Delete</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tasks added yet.</p>
+        {% endif %}
     </div>
 
-    <!-- RIGHT SIDE — task records + donut chart -->
+    <!-- RIGHT SIDE — task chart -->
     <div class="glass-box right-box">
-
         <h3>Your Tasks Overview</h3>
 
         <!-- Donut chart container -->
@@ -36,28 +54,7 @@
             <canvas id="taskChart"></canvas>
         </div>
 
-        <h3 style="margin-top: 20px;">Task Records</h3>
-
-        {% if tasks %}
-            <ul class="task-list" id="taskList">
-                {% for t in tasks %}
-                    <li class="{% if t['completed'] %}completed-task{% endif %}">
-                        {{ t['name'] }} — {{ t['category'] }} — {{ t['due_date'] }}
-
-                        {% if not t['completed'] %}
-                            <a class="task-btn complete" href="{{ url_for('complete_task', task_id=t['id']) }}">Complete</a>
-                        {% endif %}
-
-                        <a class="task-btn delete" href="{{ url_for('delete_task', task_id=t['id']) }}">Delete</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No tasks yet.</p>
-        {% endif %}
-
     </div>
-
 </div>
 
 <!-- Chart.js library -->
@@ -66,31 +63,36 @@
 <!-- Donut chart script -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Data from backend
-    const completed = {{ completed_tasks | default(0) }}
-    const pending = {{ pending_tasks | default(0) }};
-
     const ctx = document.getElementById('taskChart').getContext('2d');
-
     new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Completed', 'Pending'],
             datasets: [{
                 data: [completed, pending],
-                backgroundColor: ['#4CAF50', '#F44336'], // Green & Red
-                hoverOffset: 6
+                backgroundColor: ['#4CAF50', '#FF9800'],
+                borderColor: ['#45a049', '#F57C00'],
+                borderWidth: 2
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'bottom' }
+                legend: {
+                    position: 'bottom'
+                }
             }
         }
     });
-});
+})
 </script>
+<style>
+/* Optional: make quote stand out */
+.quote {
+    font-style: italic;
+    color: #555;
+    margin: 10px 0 20px 0;
+}
+</style>
 
 {% endblock %}
