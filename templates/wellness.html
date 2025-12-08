@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 25px;
+        padding: 40px;
+        width: 70%;
+        max-width: 800px;
+        margin: 40px auto;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        text-align: center;
+    }
+
+    .title-red {
+        color: #c62828;
+        font-weight: 700;
+        font-size: 2rem;
+    }
+
+    .tip-card {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .tip-title {
+        color: #b71c1c;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    #breathing-circle {
+        width: 150px;
+        height: 150px;
+        margin: 20px auto;
+        border-radius: 50%;
+        background: rgba(198, 40, 40, 0.4);
+        transition: all 4s ease;
+        box-shadow: 0 0 20px rgba(198, 40, 40, 0.5);
+        cursor: pointer;
+    }
+
+    #startBtn {
+        padding: 10px 25px;
+        border-radius: 20px;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="glass-card">
+    <h2 class="title-red">Wellness Tips</h2>
+    <p style="margin-bottom: 30px; font-size: 1.1rem;">
+        Simple calming techniques and reminders to help you stay balanced.
+    </p>
+
+    <!-- Tips Section -->
+    <div class="tip-card">
+        <div class="tip-title">🧘 Deep Breathing</div>
+        <p>Inhale for 4 seconds, hold for 4, exhale for 4. Repeat 5 times.</p>
+    </div>
+
+    <div class="tip-card">
+        <div class="tip-title">☀️ Take Breaks</div>
+        <p>A 5-minute walk or stretch can reset your focus.</p>
+    </div>
+
+    <div class="tip-card">
+        <div class="tip-title">🧠 Grounding Technique</div>
+        <p>Identify 5 things you see, 4 you feel, 3 you hear, 2 you smell, 1 you taste.</p>
+    </div>
+
+    <div class="tip-card">
+        <div class="tip-title">💧 Stay Hydrated</div>
+        <p>Drink water every 2–3 hours to support mental clarity.</p>
+    </div>
+
+    <hr style="margin: 40px 0;">
+
+    <!-- Breathing Exercise Section -->
+    <h3 class="title-red">Test your stress level here.</h3>
+    <p>Follow the breathing prompts and tap the circle at the correct times. This helps estimate your stress level.</p>
+
+    <div id="breathing-box" style="margin-top: 20px;">
+        <div id="breathing-circle"></div>
+
+        <button id="startBtn" class="btn btn-danger mt-3">Start Breathing Test</button>
+
+        <p id="instruction" style="margin-top:20px; font-size:1.2rem; font-weight:600;"></p>
+        <p id="result" style="font-size:1.1rem; margin-top:20px;"></p>
+    </div>
+</div>
+
+<script>
+    let step = 0;
+    let score = 0;
+    let interval;
+
+    function startBreathingTest() {
+        step = 0;
+        score = 0;
+        document.getElementById("result").textContent = "";
+        nextStep();
+        
+        interval = setInterval(nextStep, 4000); 
+    }
+
+    function nextStep() {
+        const instruction = document.getElementById("instruction");
+        const circle = document.getElementById("breathing-circle");
+
+        if (step === 0) {
+            instruction.textContent = "Inhale… tap the circle when you're breathing in.";
+            circle.style.transform = "scale(1.4)";
+        } else if (step === 1) {
+            instruction.textContent = "Exhale… tap the circle when you're breathing out.";
+            circle.style.transform = "scale(1.0)";
+        } else if (step === 2) {
+            clearInterval(interval);
+            showResult();
+            return;
+        }
+
+        step++;
+    }
+
+    document.getElementById("breathing-circle").addEventListener("click", () => {
+        if (step === 1) score++;     
+        if (step === 2) score++;     
+    });
+
+    function showResult() {
+        let resultText = "";
+        
+        if (score === 2) {
+            resultText = "🌿 Excellent control! Your breathing is very steady. Stress level: LOW.";
+        } else if (score === 1) {
+            resultText = "😌 Not bad! You're somewhat aligned. Stress level: MODERATE.";
+        } else {
+            resultText = "😥 You seem a bit out of sync. Stress level: HIGH. Try again and take your time.";
+        }
+
+        document.getElementById("instruction").textContent = "";
+        document.getElementById("result").textContent = resultText;
+    }
+
+    document.getElementById("startBtn").addEventListener("click", startBreathingTest);
+</script>
+
+{% endblock %}

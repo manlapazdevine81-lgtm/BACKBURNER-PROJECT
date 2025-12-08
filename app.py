@@ -184,6 +184,10 @@ def profile():
     tasks = get_tasks_for_user(user_email)
     return render_template('profile.html', title='Profile', user=user_email, tasks=tasks)
 
+@app.route('/wellness')
+def wellness():
+    return render_template('wellness.html')
+
 @app.route('/complete_task/<int:task_id>')
 def complete_task(task_id):
     if 'user' not in session:

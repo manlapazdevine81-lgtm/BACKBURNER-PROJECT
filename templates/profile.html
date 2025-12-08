@@ -1,96 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="glass-box small-box">
+  <h2 class="title">Welcome, {{ user }}</h2>
 
-<div class="profile-layout">
-
-    <!-- LEFT SIDE — existing welcome + add task -->
-    <div class="glass-box small-box left-box">
-        <h2 class="title">Welcome, {{ user }}</h2>
-
-        <h3>Add New Task</h3>
-        <form method="POST">
-            <div class="field">
-                <input type="text" name="task" placeholder="Task name" required>
-            </div>
-            <div class="field">
-                <select name="category">
-                    <option value="School">School</option>
-                    <option value="Personal">Personal</option>
-                    <option value="Work">Work</option>
-                </select>
-            </div>
-            <div class="field">
-                <input type="date" name="due_date">
-            </div>
-            <button class="form-btn" type="submit">Add Task</button>
-        </form>
+  <h3>Add New Task</h3>
+  <form method="POST">
+    <div class="field">
+      <input type="text" name="task" placeholder="Task name" required>
     </div>
-
-    <!-- RIGHT SIDE — task records + donut chart -->
-    <div class="glass-box right-box">
-
-        <h3>Your Tasks Overview</h3>
-
-        <!-- Donut chart container -->
-        <div class="chart-area" style="width: 250px; height: 250px; margin: auto;">
-            <canvas id="taskChart"></canvas>
-        </div>
-
-        <h3 style="margin-top: 20px;">Task Records</h3>
-
-        {% if tasks %}
-            <ul class="task-list" id="taskList">
-                {% for t in tasks %}
-                    <li class="{% if t['completed'] %}completed-task{% endif %}">
-                        {{ t['name'] }} — {{ t['category'] }} — {{ t['due_date'] }}
-
-                        {% if not t['completed'] %}
-                            <a class="task-btn complete" href="{{ url_for('complete_task', task_id=t['id']) }}">Complete</a>
-                        {% endif %}
-
-                        <a class="task-btn delete" href="{{ url_for('delete_task', task_id=t['id']) }}">Delete</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No tasks yet.</p>
-        {% endif %}
-
+    <div class="field">
+      <select name="category">
+        <option value="School">School</option>
+        <option value="Personal">Personal</option>
+        <option value="Work">Work</option>
+      </select>
     </div>
+    <div class="field">
+      <input type="date" name="due_date">
+    </div>
+    <button class="form-btn" type="submit">Add Task</button>
+  </form>
 
+  <h3 style="margin-top:20px">Your Tasks</h3>
+  {% if tasks %}
+    <ul class="task-list">
+      {% for t in tasks %}
+        <li>
+          {% if t['completed'] %}
+            <s>{{ t['name'] }}</s>
+          {% else %}
+            {{ t['name'] }}
+          {% endif %}
+          — {{ t['category'] }} — {{ t['due_date'] }}
+          {% if not t['completed'] %}
+            <a href="{{ url_for('complete_task', task_id=t['id']) }}">Complete</a>
+          {% endif %}
+          <a href="{{ url_for('delete_task', task_id=t['id']) }}">Delete</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No tasks yet.</p>
+  {% endif %}
 </div>
-
-<!-- Chart.js library -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- Donut chart script -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Data from backend
-    const completed = {{ completed_tasks | default(0) }}
-    const pending = {{ pending_tasks | default(0) }};
-
-    const ctx = document.getElementById('taskChart').getContext('2d');
-
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Completed', 'Pending'],
-            datasets: [{
-                data: [completed, pending],
-                backgroundColor: ['#4CAF50', '#F44336'], // Green & Red
-                hoverOffset: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom' }
-            }
-        }
-    });
-});
-</script>
-
 {% endblock %}
