@@ -31,14 +31,16 @@
         <div class="feature-card">
             <h3>📅 Schedule</h3>
             <p>See events and deadlines in calendar mode.</p>
-            <button class="feature-btn">View Calendar</button>
+            <a href="{{ url_for('calendar') }}">
+                <button class="feature-btn">View Calendar</button>
+            </a>
         </div>
 
         <div class="feature-card">
             <h3>💬 Wellness Tips</h3>
             <p>Read advice and calming techniques.</p>
             <a href="{{ url_for('wellness') }}">
-               <button class="feature-btn">Explore</button>
+                <button class="feature-btn">Explore</button>
             </a>
         </div>
 

@@ -48,6 +48,16 @@ def init_db():
             FOREIGN KEY(user_email) REFERENCES users(email)
         )
     ''')
+    db.execute('''
+        CREATE TABLE IF NOT EXISTS events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_email TEXT NOT NULL,
+            date TEXT NOT NULL,
+            title TEXT NOT NULL,
+            type TEXT NOT NULL,
+            FOREIGN KEY(user_email) REFERENCES users(email)
+        )
+    ''')
     db.commit()
     db.close()
 
@@ -109,6 +119,31 @@ def delete_task_by_id(task_id):
 
 # initialize new DB
 init_db()
+
+import json
+import os
+
+EVENTS_FILE = "events.json"
+
+def load_events():
+    if not os.path.exists(EVENTS_FILE):
+        return {}
+    with open(EVENTS_FILE, "r") as f:
+        return json.load(f)
+
+def save_event(date, title, desc):
+    events = load_events()
+
+    if date not in events:
+        events[date] = []
+
+    events[date].append({
+        "title": title,
+        "description": desc
+    })
+
+    with open(EVENTS_FILE, "w") as f:
+        json.dump(events, f, indent=4)
 
 # ------- Routes -------
 @app.route('/')
@@ -203,6 +238,33 @@ def delete_task(task_id):
     delete_task_by_id(task_id)
     flash("Task deleted successfully!")
     return redirect(url_for('profile'))
+
+@app.route("/calendar")
+def calendar():
+    events = load_events()
+    return render_template("calendar.html", events=load_events())
+
+
+@app.route("/add_event", methods=["POST"])
+def add_event():
+    date = request.form["event_date"]
+    title = request.form["event_title"]
+    desc = request.form["event_description"]
+
+    save_event(date, title, desc)
+
+    return redirect(url_for("calendar"))
+
+@app.route("/delete_event/<date>/<int:index>", methods=["POST"])
+def delete_event(date, index):
+    events = load_events()
+    if date in events and 0 <= index < len(events[date]):
+        events[date].pop(index)
+        if len(events[date]) == 0:
+            del events[date]
+        with open(EVENTS_FILE, "w") as f:
+            json.dump(events, f, indent=4)
+    return ("", 204) 
 
 @app.route('/logout')
 def logout():
