@@ -217,7 +217,12 @@ def profile():
         return redirect(url_for('profile'))
 
     tasks = get_tasks_for_user(user_email)
-    return render_template('profile.html', title='Profile', user=user_email, tasks=tasks)
+
+    completed = len([t for t in tasks if t['completed']])
+    total = len(tasks)
+    progress = int((completed / total) * 100) if total > 0 else 0
+
+    return render_template('profile.html', title='Profile', user=user_email, tasks=tasks, progress=progress)
 
 @app.route('/wellness')
 def wellness():
