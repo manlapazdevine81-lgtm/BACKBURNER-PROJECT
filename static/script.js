@@ -38,31 +38,3 @@ document.querySelectorAll(".mood-btn").forEach(btn => {
     alert("You selected: " + mood + " 🌿");
   });
 });
-
-// Donut chart for tasks (requires completed & pending to be defined in HTML)
-const ctx = document.getElementById('taskChart')?.getContext('2d');
-if (ctx) {
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Completed', 'Pending'],
-            datasets: [{
-                data: [completed, pending],
-                backgroundColor: ['#4CAF50', '#F44336'],
-                hoverOffset: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
-    });
-}
-
-
-

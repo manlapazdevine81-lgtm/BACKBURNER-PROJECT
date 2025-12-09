@@ -432,64 +432,218 @@ nav a:hover { text-shadow: 0 0 6px white; }
     box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 
-/*profile*/
-.profile-layout {
+/* MAIN CONTAINER */
+.calendar-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 40px 50px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.12);
+    text-align: center;
+}
+
+/* TITLES */
+.calendar-title {
+    font-size: 36px;
+    color: #c62828;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.calendar-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* HEADER NAVIGATION */
+.calendar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.cal-btn {
+    background: #c62828;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    font-size: 24px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.cal-btn:hover {
+    background: #b71c1c;
+    transform: translateY(-2px);
+}
+
+/* MONTH TITLE */
+#monthAndYear {
+    font-size: 26px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* CALENDAR GRID */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    margin-top: 15px;
+}
+
+/* EACH DAY CELL */
+.calendar-grid div {
+    background: #fafafa;
+    padding: 15px;
+    min-height: 90px;
+    text-align: left;
+    border-radius: 18px;
+    border: 1px solid #eee;
+    position: relative;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    transition: 0.2s ease;
+}
+
+.calendar-grid div:hover {
+    background: #fff5f5;
+    transform: scale(1.02);
+    cursor: pointer;
+}
+
+/* DATE NUMBER */
+.calendar-grid div strong {
+    font-size: 15px;
+    color: #333;
+}
+
+/* EVENT TAGS */
+.event {
+    margin-top: 8px;
+    padding: 5px 7px;
+    background: #ffe4e4;
+    color: #c62828;
+    font-size: 13px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* ADD BUTTON */
+.add-event-main-btn {
+    margin-top: 30px;
+    background: #c62828;
+    color: white;
+    padding: 14px 30px;
+    font-size: 18px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.add-event-main-btn:hover {
+    background: #b71c1c;
+    transform: translateY(-2px);
+}
+
+/* ------------------ MODAL ------------------ */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 999;
+}
+
+.modal-content {
+    width: 400px;
+    background: white;
+    margin: 140px auto;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 22px rgba(0,0,0,0.25);
+    animation: pop 0.2s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-content h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #c62828;
+    margin-bottom: 15px;
+}
+
+/* FORM */
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 15px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+}
+
+.modal-buttons {
     display: flex;
     justify-content: space-between;
-    gap: 30px;
-    width: 100%;
-    margin-top: 20px;
 }
 
-.left-box {
-    width: 60%;
-}
-
-.right-box {
-    width: 55%;
-}
-
-.chart-area {
-    width: 100%;
-    height: 250px;
-    margin-bottom: 20px;
-}
-
-.task-list {
-    list-style: none;
-    padding: 0;
-}
-
-.task-list li {
-    padding: 10px;
-    margin-bottom: 10px;
-    background: rgba(255,255,255,0.7);
+.save-btn {
+    background: #c62828;
+    color: white;
+    border: none;
+    padding: 10px 20px;
     border-radius: 12px;
+    cursor: pointer;
 }
 
-.completed-task {
-    opacity: 0.5;
-    text-decoration: line-through;
+.cancel-btn {
+    background: #ccc;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
 }
 
-.task-btn {
-    margin-left: 10px;
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    text-decoration: none;
+.calendar-day.holiday {
+    background: #ffdfdf;
+    border-left: 4px solid #ff6b6b;
+    position: relative;
 }
 
-.task-btn.complete {
-    background: #4CAF50;
-    color: white;
+.holiday-name {
+    font-size: 9px;
+    color: #c0392b;
+    display: block;
 }
 
-.task-btn.delete {
-    background: #F44336;
-    color: white;
+.event-dot {
+    width: 6px;
+    height: 6px;
+    background: #4c8bf5;
+    border-radius: 50%;
+    margin: 3px auto 0;
 }
 
+.calendar-day.today {
+    outline: 3px solid #6ea8fe;
+    background: #e9f1ff;
+}
 
 .welcome-box .main-title {
     /* Uses your primary red color */

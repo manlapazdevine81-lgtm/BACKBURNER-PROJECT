@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Schedule{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<div class="calendar-container">
+    <h1 class="calendar-title">Schedule</h1>
+    <p class="calendar-subtitle">View your events, holidays, and add your own schedule.</p>
+
+    <div class="calendar-header">
+        <button id="prevMonth" class="cal-btn">‹</button>
+        <h2 id="monthAndYear"></h2>
+        <button id="nextMonth" class="cal-btn">›</button>
+    </div>
+
+    <div id="calendar" class="calendar-grid"></div>
+</div>
+
+<!-- Modal -->
+<div id="eventModal" class="modal">
+    <div class="modal-content">
+        <h3>Add New Event</h3>
+
+        <form id="eventForm" method="POST" action="{{ url_for('add_event') }}">
+            <label>Date:</label>
+            <input type="date" name="event_date" id="eventDate" required>
+
+            <label>Event Title:</label>
+            <input type="text" name="event_title" placeholder="Ex: Birthday, Meeting" required>
+
+            <label>Description:</label>
+            <textarea name="event_description" rows="3"></textarea>
+
+            <div class="modal-buttons">
+                <button type="submit" class="save-btn">Save</button>
+                <button type="button" id="closeModal" class="cancel-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const events = {{ events|tojson | safe }};
+</script>
+<script src="{{ url_for('static', filename='calendar.js') }}"></script>
+{% endblock %}
