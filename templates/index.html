@@ -1,12 +1,38 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="hero-container">
-    <h1 class="hero-title">Welcome to <span>Project KALMA</span></h1>
-    <p class="hero-sub">(Keeping Assistance for Learners’ Mental Awareness)</p>
-    <p class="hero-desc">
-        Your mental wellness web application for BatStateU 2nd-year IT students.<br>
-        Manage tasks, track schedules, and access mental wellness resources all in one place.
-    </p>
-    <a href="{{ url_for('login') }}" class="hero-btn">Get Started</a>
+
+<div class="box welcome-box"> 
+    <h1 class="main-title">Welcome to Project KALMA</h1> 
+    <p class="tagline">(Keeping Assistance for Learners’ Mental Awareness)</p>
+    <p>Your mental wellness web application for BatStateU 2nd-year IT students.</p>
+    <p>Manage tasks, track schedules, and access mental wellness resources all in one place.</p>
+    <a href="{{ url_for('register') }}" class="btn red">Get Started</a>
 </div>
+
+<div class="info-section">
+    <h2 class="section-heading">Why Mental Wellness Matters</h2>
+    <div class="wellness-grid">
+        
+        <div class="wellness-card box">
+            <img src="{{ url_for('static', filename='images/focus_icon.png') }}" alt="Focus Icon">
+            <h3 class="card-title">Boost Focus</h3>
+            <p>Managing stress and anxiety directly improves concentration and productivity for your IT studies.</p>
+        </div>
+        
+        <div class="wellness-card box">
+            <img src="{{ url_for('static', filename='images/balance_icon.png') }}" alt="Balance Icon">
+            <h3 class="card-title">Find Balance</h3>
+            <p>It helps balance the demands of academics with personal life, preventing burnout and fatigue.</p>
+        </div>
+        
+        <div class="wellness-card box">
+            <img src="{{ url_for('static', filename='images/support_icon.png') }}" alt="Support Icon">
+            <h3 class="card-title">Build Resilience</h3>
+            <p>Mental wellness provides the emotional strength needed to handle challenging deadlines and projects.</p>
+        </div>
+        
+    </div>
+</div>
+
 {% endblock %}
