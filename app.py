@@ -271,6 +271,10 @@ def delete_event(date, index):
             json.dump(events, f, indent=4)
     return ("", 204) 
 
+@app.route('/simplegame')
+def simplegame():
+    return render_template('simplegame.html')
+
 @app.route('/logout')
 def logout():
     session.pop('user', None)
@@ -279,3 +283,4 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+

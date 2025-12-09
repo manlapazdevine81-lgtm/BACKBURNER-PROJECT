@@ -36,13 +36,21 @@
             </a>
         </div>
 
-        <div class="feature-card">
+          <div class="feature-card">
             <h3>💬 Wellness Tips</h3>
             <p>Read advice and calming techniques.</p>
             <a href="{{ url_for('wellness') }}">
                 <button class="feature-btn">Explore</button>
             </a>
         </div>
+
+        <div class="feature-card">
+             <h3>🎮 Stress Relief Game</h3>
+            <p>Play a calming game to reduce stress.</p>
+            <a href="{{ url_for('simplegame') }}">
+                <button class="feature-btn">Play</button>
+            </a>
+        </div>     
 
     </div>
 </div>
@@ -65,4 +73,7 @@
     </div>
 </div>
 
+
 {% endblock %}
+
+

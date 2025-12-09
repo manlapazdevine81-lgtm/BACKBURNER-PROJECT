@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stress Relief Bubble Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #a0e5ff, #fff8c7);
+            font-family: Arial, sans-serif;
+            text-align: center;
+            overflow: hidden;
+        }
+        h1 { color: #444; margin-top: 20px; }
+        #bubble {
+            width: 120px; height: 120px;
+            background: radial-gradient(circle, #fff, #87ceeb);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            position: absolute;
+            transition: 0.12s ease-in-out;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>💬 Pop Stress Away!</h1>
+    <p>Click or tap the bubble to release stress 😊</p>
+    <div id="bubble" role="button" aria-label="Stress bubble"></div>
+
+    <script>
+        const bubble = document.getElementById("bubble");
+
+        function moveBubble() {
+            const padding = 20;
+            const maxX = Math.max(window.innerWidth - 150, 150);
+            const maxY = Math.max(window.innerHeight - 150, 150);
+            let x = Math.random() * (maxX - padding) + padding;
+            let y = Math.random() * (maxY - padding) + padding;
+            bubble.style.left = x + "px";
+            bubble.style.top = y + "px";
+        }
+
+        function popEffect() {
+            bubble.style.transform = "scale(0.85)";
+            setTimeout(()=> bubble.style.transform = "scale(1)", 120);
+            moveBubble();
+        }
+
+        bubble.addEventListener("click", popEffect);
+        bubble.addEventListener("touchstart", function(e){
+            e.preventDefault();
+            popEffect();
+        }, {passive:false});
+
+        // initial placement
+        moveBubble();
+
+        // keep bubble re-positioned when user resizes
+        window.addEventListener('resize', moveBubble);
+    </script>
+
+</body>
+</html>
