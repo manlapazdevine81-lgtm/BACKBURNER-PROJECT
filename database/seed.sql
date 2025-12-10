@@ -1,10 +1,10 @@
--- Users Table --
+-- USERS TABLE
 CREATE TABLE IF NOT EXISTS users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL,
-    email VARCHAR(50) UNIQUE NOT NULL,
-    role VARCHAR(20) NOT NULL,
-    created_at DATE DEFAULT CURRENT_DATE
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    role TEXT NOT NULL,
+    created_at TEXT DEFAULT (DATE('now'))
 );
 
 INSERT INTO users (name, email, role) VALUES
@@ -29,14 +29,14 @@ INSERT INTO users (name, email, role) VALUES
 ('Marco Tan', 'marco@example.com', 'Student'),
 ('Ella Mae', 'ellamae@example.com', 'Student');
 
--- Tasks Table --
+-- TASKS TABLE
 CREATE TABLE IF NOT EXISTS tasks (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(100) NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
     description TEXT,
-    user_id INT,
-    due_date DATE,
-    status VARCHAR(20),
+    user_id INTEGER,
+    due_date TEXT,
+    status TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
@@ -62,13 +62,13 @@ INSERT INTO tasks (title, description, user_id, due_date, status) VALUES
 ('Record Video', 'Record instructional video', 19, '2025-12-20', 'Pending'),
 ('Prepare Survey', 'Survey for students', 20, '2025-12-21', 'Pending');
 
--- Courses Table -- 
+-- COURSES TABLE
 CREATE TABLE IF NOT EXISTS courses (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    course_name VARCHAR(50) NOT NULL,
-    instructor VARCHAR(50),
-    start_date DATE,
-    end_date DATE
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    course_name TEXT NOT NULL,
+    instructor TEXT,
+    start_date TEXT,
+    end_date TEXT
 );
 
 INSERT INTO courses (course_name, instructor, start_date, end_date) VALUES
