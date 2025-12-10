@@ -232,7 +232,14 @@ def dashboard():
         return redirect(url_for('login'))
     user_row = get_user_by_email(session['user'])
     fullname = user_row['fullname'] if user_row else session['user']
-    return render_template('dashboard.html', title='Dashboard', user=fullname)
+    return render_template(
+        'dashboard.html', 
+        title='Dashboard', 
+        user=fullname,
+        moods=list(WELLNESS_TIPS_MOOD.keys()),
+        tips=WELLNESS_TIPS_MOOD,
+        quotes=DAILY_QUOTES
+    )
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():

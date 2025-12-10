@@ -51,9 +51,31 @@
 </div>
 <!-- END OF DASHBOARD -->
 
-
-
+<!-- Mood Tracker Modal -->
+<div id="moodModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+     background: rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;">
+  <div style="background:white; padding:20px; border-radius:10px; width:300px; text-align:center;">
+    <h3>Track Your Mood 🌿</h3>
+    <select id="mood">
+        {% for mood in moods %}
+        <option value="{{ mood }}">{{ mood.capitalize() }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+    <button class="mood-btn" data-mood="{{ mood }}" onclick="alert('You selected: ' + document.getElementById('mood').value + ' 🌿')">Submit Mood</button>
+    <br><br>
+    <button onclick="closeMoodTracker()">Close</button>
+  </div>
+</div>
 
 {% endblock %}
+
+<!-- Script link for Mood Tracker -->
+<script>
+const WELLNESS_TIPS = {{ tips|tojson }};
+const QUOTES = {{ quotes|tojson }};
+</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
 
 

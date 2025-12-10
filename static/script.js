@@ -1,5 +1,7 @@
 // Placeholder for future interactivity
 console.log("Project KALMA loaded");
+
+// ---------- Task Filtering ----------
 function filterTasks(view) {
     const today = new Date();
     const tasks = document.querySelectorAll("#taskList li");
@@ -16,25 +18,46 @@ function filterTasks(view) {
         task.style.display = show ? "list-item" : "none";
     });
 }
+
+// ---------- Leaf Animation ----------
 const leaves = document.querySelectorAll(".leaf");
 leaves.forEach(leaf => {
   leaf.style.animationDuration = (8 + Math.random() * 7) + "s";
   leaf.style.opacity = 0.4 + Math.random() * 0.4;
 });
 
-// Mood Modal Controls
+// ---------- Mood Tracker Modal Controls ----------
 function openMoodTracker() {
-  document.getElementById("moodModal").style.display = "flex";
+  const modal = document.getElementById("moodModal");
+  if(modal) modal.style.display = "flex";
 }
 
 function closeMoodTracker() {
-  document.getElementById("moodModal").style.display = "none";
+  const modal = document.getElementById("moodModal");
+  if(modal) modal.style.display = "none";
 }
 
-// Mood Buttons
-document.querySelectorAll(".mood-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const mood = btn.dataset.mood;
-    alert("You selected: " + mood + " 🌿");
-  });
+// ---------- Mood Buttons Handling ----------
+document.addEventListener("DOMContentLoaded", () => {
+    // Check if there are mood buttons in the modal
+    document.querySelectorAll(".mood-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const mood = btn.dataset.mood;
+        const tips = WELLNESS_TIPS[mood] || [];
+        const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+        alert(`Mood: ${mood}\nTip: ${tips[0]}\nQuote: "${quote}" 🌿`);
+        closeMoodTracker();
+      });
+    });
+
+    // Optional: handle mood select dropdown if no buttons
+    const moodSelect = document.getElementById("mood");
+    if(moodSelect) {
+        moodSelect.addEventListener("change", () => {
+            const mood = moodSelect.value;
+            const tips = WELLNESS_TIPS[mood] || [];
+            const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+            alert(`Mood: ${mood}\nTip: ${tips[0]}\nQuote: "${quote}" 🌿`);
+        });
+    }
 });
