@@ -2,6 +2,10 @@ from flask import Flask, render_template, request, redirect, flash, session, url
 import os
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # This loads the variables from .env
 
 # Import Psycopg2 for PostgreSQL
 import psycopg2 
@@ -11,10 +15,10 @@ app = Flask(__name__)
 app.secret_key = "kalma_secret_key"
 
 # ------- Database Configuration for PostgreSQL -------
-DB_HOST = os.environ.get('DB_HOST', 'localhost')
-DB_NAME = os.environ.get('DB_NAME', 'postgres')
-DB_USER = os.environ.get('DB_USER', 'postgres')
-DB_PASS = os.environ.get('DB_PASS', 'cutemochie')
+DB_HOST = os.environ.get('DB_HOST',)
+DB_NAME = os.environ.get('DB_NAME',)
+DB_USER = os.environ.get('DB_USER',)
+DB_PASS = os.environ.get('DB_PASS',)
 # The SQLite database path is no longer needed
 # BASE_DIR = os.path.dirname(__file__)
 # DATABASE = os.path.join(BASE_DIR, "users.db")
@@ -244,8 +248,6 @@ def profile():
         pending_tasks=pending_tasks
     )
 
-@app.route('/complete_task/<int:task_id>')
-# ... (rest of app.py)
 
 @app.route('/wellness')
 def wellness():

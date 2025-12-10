@@ -718,3 +718,77 @@ nav a:hover { text-shadow: 0 0 6px white; }
     font-weight: 600;
     margin-top: 0;
 }
+
+.profile-layout {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-start;   
+    justify-content: center;   
+    padding: 20px;             
+}
+
+.profile-layout .left-box {
+    flex: 0 0 700px;       
+    max-width: 700px;      
+    margin-left: 20px;
+}
+
+.profile-layout .right-box {
+    flex: 1 1 500px;       
+    max-width: 600px;
+    margin-right: 20px;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+}
+
+.task-list li {
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.75);
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.task-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.25s;
+}
+
+/* Complete button = green */
+.task-btn.complete {
+    background: #4CAF50; /* green */
+}
+
+.task-btn.complete:hover {
+    background: #45a049;
+    transform: scale(1.05);
+}
+
+/* Delete button = red */
+.task-btn.delete {
+    background: #F44336; /* red */
+}
+
+.task-btn.delete:hover {
+    background: #d32f2f;
+    transform: scale(1.05);
+}
+
+/* Optional: strike-through completed tasks */
+.completed-task {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
