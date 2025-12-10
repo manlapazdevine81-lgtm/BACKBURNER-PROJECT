@@ -275,6 +275,19 @@ def delete_event(date, index):
 def simplegame():
     return render_template('simplegame.html')
 
+@app.route("/bubble")
+def bubble():
+    return render_template("bubble.html")
+
+@app.route("/numbers")
+def numbers():
+    return render_template("numbers.html")
+
+@app.route("/memory")
+def memory():
+    return render_template("memory.html")
+
+
 @app.route('/logout')
 def logout():
     session.pop('user', None)

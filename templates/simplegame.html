@@ -1,68 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Stress Relief Bubble Game</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(120deg, #a0e5ff, #fff8c7);
-            font-family: Arial, sans-serif;
-            text-align: center;
-            overflow: hidden;
-        }
-        h1 { color: #444; margin-top: 20px; }
-        #bubble {
-            width: 120px; height: 120px;
-            background: radial-gradient(circle, #fff, #87ceeb);
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            position: absolute;
-            transition: 0.12s ease-in-out;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Stress Relief Mini Games</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+    }
+
+    header {
+        background: #c63d4a;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 26px;
+        font-weight: bold;
+    }
+
+    .screen {
+        display: none;
+        padding: 40px;
+        text-align: center;
+    }
+
+    #menu-screen {
+        display: block; /* Start here */
+    }
+
+    .menu-box {
+        width: 350px;
+        margin: 60px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 0px 12px rgba(0,0,0,0.15);
+    }
+
+    .menu-btn {
+        width: 100%;
+        padding: 12px;
+        margin-top: 15px;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        background: #c63d4a;
+        color: white;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .menu-btn:hover {
+        background: #a2313c;
+    }
+
+    #game-area {
+        width: 90%;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0px 0px 12px rgba(0,0,0,0.15);
+        min-height: 500px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 8px 15px;
+        background: #c63d4a;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    /* Bubble style */
+    .bubble {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(135,206,235,0.7);
+        position: absolute;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .bubble:hover { transform: scale(1.2); }
+
+    /* Memory Card Grid */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 100px);
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .card {
+        width: 100px;
+        height: 100px;
+        background: #c63d4a;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        color: white;
+        cursor: pointer;
+    }
+
+    .card.flipped {
+        background: #eee;
+        color: #333;
+    }
+
+    /* Typing Game */
+    #typingInput {
+        padding: 10px;
+        font-size: 22px;
+        width: 300px;
+        margin-top: 20px;
+    }
+</style>
 </head>
+
 <body>
 
-    <h1>💬 Pop Stress Away!</h1>
-    <p>Click or tap the bubble to release stress 😊</p>
-    <div id="bubble" role="button" aria-label="Stress bubble"></div>
+<header>Stress Relief Mini Games</header>
 
-    <script>
-        const bubble = document.getElementById("bubble");
+<!-- MAIN MENU SCREEN -->
+<div id="menu-screen" class="screen">
+    <div class="menu-box">
+        <h2>Select a Game</h2>
+        <button class="menu-btn" onclick="loadGame('bubble')">Bubble Pop</button>
+        <button class="menu-btn" onclick="loadGame('typing')">Typing Speed</button>
+        <button class="menu-btn" onclick="loadGame('memory')">Memory Card Flip</button>
+    </div>
+</div>
 
-        function moveBubble() {
-            const padding = 20;
-            const maxX = Math.max(window.innerWidth - 150, 150);
-            const maxY = Math.max(window.innerHeight - 150, 150);
-            let x = Math.random() * (maxX - padding) + padding;
-            let y = Math.random() * (maxY - padding) + padding;
-            bubble.style.left = x + "px";
-            bubble.style.top = y + "px";
+<!-- GAME SCREEN -->
+<div id="game-screen" class="screen">
+    <button class="back-btn" onclick="goBack()">← Back</button>
+    <div id="game-area"></div>
+</div>
+
+<script>
+
+/* ----------- NAVIGATION ----------- */
+function loadGame(type) {
+    document.getElementById("menu-screen").style.display = "none";
+    document.getElementById("game-screen").style.display = "block";
+
+    if (type === "bubble") startBubblePop();
+    if (type === "typing") startTypingGame();
+    if (type === "memory") startMemoryGame();
+}
+
+function goBack() {
+    document.getElementById("game-screen").style.display = "none";
+    document.getElementById("menu-screen").style.display = "block";
+}
+
+/* ----------- BUBBLE POP GAME ----------- */
+function startBubblePop() {
+    const area = document.getElementById("game-area");
+    area.innerHTML = "<h2>Bubble Pop!</h2>";
+
+    for (let i = 0; i < 20; i++) {
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+        bubble.style.left = Math.random() * 600 + "px";
+        bubble.style.top = Math.random() * 300 + "px";
+        bubble.onclick = () => bubble.remove();
+        area.appendChild(bubble);
+    }
+}
+
+
+let wordList = ["smile", "focus", "relax", "energy", "ocean", "keyboard", "happy", "music", "friends"];
+
+function startTypingGame() {
+    const area = document.getElementById("game-area");
+
+    let word = wordList[Math.floor(Math.random() * wordList.length)];
+    let startTime = null;
+
+    area.innerHTML = `
+        <h2>Type it!</h2>
+        <p>Type the word as fast as you can!</p>
+        <div style="font-size:32px; font-weight:bold;" id="wordDisplay">${word}</div>
+        <input id="typingInput" placeholder="Start typing...">
+        <p id="result" style="font-size:20px; font-weight:bold;"></p>
+    `;
+
+    const input = document.getElementById("typingInput");
+
+    input.addEventListener("input", () => {
+        if (!startTime) startTime = Date.now();
+
+        if (input.value === word) {
+            let elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+            document.getElementById("result").textContent = 
+                `Great job! You typed it in ${elapsed} seconds 🎉`;
+
+            setTimeout(startTypingGame, 1500);
         }
+    });
+}
 
-        function popEffect() {
-            bubble.style.transform = "scale(0.85)";
-            setTimeout(()=> bubble.style.transform = "scale(1)", 120);
-            moveBubble();
-        }
 
-        bubble.addEventListener("click", popEffect);
-        bubble.addEventListener("touchstart", function(e){
-            e.preventDefault();
-            popEffect();
-        }, {passive:false});
+function startMemoryGame() {
+    const area = document.getElementById("game-area");
+    area.innerHTML = "<h2>Match the cards!</h2>";
 
-        // initial placement
-        moveBubble();
+    let values = [1,1,2,2,3,3,4,4].sort(() => Math.random() - 0.5);
+    let firstCard = null;
+    let lock = false;
+    let matchedPairs = 0;
 
-        // keep bubble re-positioned when user resizes
-        window.addEventListener('resize', moveBubble);
-    </script>
+    const grid = document.createElement("div");
+    grid.className = "card-grid";
+
+    values.forEach(val => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.textContent = "?";
+        card.dataset.value = val;
+
+        card.onclick = () => {
+            if (lock || card.classList.contains("flipped")) return;
+
+            card.textContent = val;
+            card.classList.add("flipped");
+
+            if (!firstCard) {
+                firstCard = card;
+            } else {
+                lock = true;
+
+                if (card.dataset.value === firstCard.dataset.value) {
+                    // Match found
+                    matchedPairs++;
+                    firstCard = null;
+                    lock = false;
+
+                    // ⭐ Restart when all pairs are matched
+                    if (matchedPairs === values.length / 2) {
+                        setTimeout(() => {
+                            alert("Great job! Restarting game...");
+                            startMemoryGame();
+                        }, 600);
+                    }
+
+                } else {
+                    // Wrong match → flip back
+                    setTimeout(() => {
+                        card.textContent = "?";
+                        card.classList.remove("flipped");
+
+                        firstCard.textContent = "?";
+                        firstCard.classList.remove("flipped");
+
+                        firstCard = null;
+                        lock = false;
+                    }, 800);
+                }
+            }
+        };
+
+        grid.appendChild(card);
+    });
+
+    area.appendChild(grid);
+}
+
+</script>
 
 </body>
 </html>
