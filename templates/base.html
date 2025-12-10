@@ -25,13 +25,14 @@
   <main>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <ul class="flashes">
-          {% for m in messages %}
-            <li>{{ m }}</li>
+        <div class="flash-container-center">
+          {% for msg in messages %}
+            <div class="flash-message-center">{{ msg }}</div>
           {% endfor %}
-        </ul>
+        </div>
       {% endif %}
     {% endwith %}
+
 
     {% block content %}{% endblock %}
   </main>
