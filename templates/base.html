@@ -10,16 +10,16 @@
   <header>
     <h1>Project KALMA</h1>
     <nav>
-      <a href="{{ url_for('index') }}">Home</a>
-      {% if 'user' not in session %}
+    {% if 'user' not in session %}
+        <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('login') }}">Login</a>
         <a href="{{ url_for('register') }}">Register</a>
-      {% else %}
+    {% else %}
         <a href="{{ url_for('dashboard') }}">Dashboard</a>
         <a href="{{ url_for('profile') }}">Profile</a>
         <a href="{{ url_for('logout') }}">Logout</a>
-      {% endif %}
-    </nav>
+    {% endif %}
+</nav>
   </header>
 
   <main>

@@ -1,45 +1,113 @@
-# app.py
 from flask import Flask, render_template, request, redirect, flash, session, url_for
-import sqlite3
 import os
+import json
 from werkzeug.security import generate_password_hash, check_password_hash
+
+# Import Psycopg2 for PostgreSQL
+import psycopg2 
+from psycopg2 import extras # Used for dictionary-like rows
 
 app = Flask(__name__)
 app.secret_key = "kalma_secret_key"
 
-# Path to DB file next to app.py
-BASE_DIR = os.path.dirname(__file__)
-DATABASE = os.path.join(BASE_DIR, "users.db")
+# ------- Database Configuration for PostgreSQL -------
+DB_HOST = os.environ.get('DB_HOST', 'localhost')
+DB_NAME = os.environ.get('DB_NAME', 'postgres')
+DB_USER = os.environ.get('DB_USER', 'postgres')
+DB_PASS = os.environ.get('DB_PASS', 'cutemochie')
+# The SQLite database path is no longer needed
+# BASE_DIR = os.path.dirname(__file__)
+# DATABASE = os.path.join(BASE_DIR, "users.db")
 
-# ------- RESET DB (you chose RESET) -------
-# This will remove existing users.db and create a fresh one when the app starts.
-if os.path.exists(DATABASE):
+# Removed the dangerous SQLite file removal logic:
+# if os.path.exists(DATABASE): ...
+
+# ------- Events File Configuration -------
+EVENTS_FILE = os.path.join(os.path.dirname(__file__), "events.json")
+
+def load_events():
+    """Loads events from the JSON file."""
+    if os.path.exists(EVENTS_FILE):
+        with open(EVENTS_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+def save_event(date, title, desc):
+    """Saves an event to the JSON file."""
+    events = load_events()
+    if date not in events:
+        events[date] = []
+    events[date].append({"title": title, "description": desc})
+    with open(EVENTS_FILE, "w") as f:
+        json.dump(events, f, indent=4)
+
+# ------- DB helpers (Updated for PostgreSQL) -------
+# ------- DB helpers (Updated for PostgreSQL) -------
+
+def get_db_conn():
+    """Establishes a connection to the PostgreSQL database."""
     try:
-        os.remove(DATABASE)
-        app.logger.info("Removed old database (reset requested).")
-    except Exception as e:
-        app.logger.warning("Could not remove old database: %s", e)
+        # Use connection string or individual parameters
+        conn = psycopg2.connect(
+            host=DB_HOST, 
+            database=DB_NAME, 
+            user=DB_USER, 
+            password=DB_PASS
+        )
+        return conn
+    except psycopg2.Error as e:
+        app.logger.error("Could not connect to PostgreSQL: %s", e)
+        # Re-raise the exception to inform the caller
+        raise
 
-# ------- DB helpers -------
-def get_db():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+def execute_query(query, params=None, fetch_one=False, fetch_all=False, commit=False):
+    """A generic helper to execute a query, handling connection/cursor."""
+    conn = None
+    result = None
+    try:
+        conn = get_db_conn()
+        # Use DictCursor for dictionary-like rows, similar to sqlite3.Row
+        cur = conn.cursor(cursor_factory=extras.DictCursor) 
+        cur.execute(query, params)
+
+        if commit:
+            conn.commit()
+        
+        if fetch_one:
+            result = cur.fetchone()
+        
+        if fetch_all:
+            result = cur.fetchall()
+            
+        cur.close()
+        return result
+
+    except psycopg2.Error as e:
+        app.logger.error("DB Error: %s in query: %s with params: %s", e, query, params)
+        if conn:
+            conn.rollback() # Rollback on error
+        # In a real application, you might want to return None/False on failure
+        # or handle the exception more gracefully.
+        raise 
+    finally:
+        if conn:
+            conn.close()
 
 def init_db():
-    db = get_db()
-    # users table + tasks table (persistent tasks)
-    db.execute('''
+    """Initializes the users and tasks tables using PostgreSQL syntax (SERIAL PK)."""
+    # Create users table
+    execute_query('''
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             fullname TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL
         )
-    ''')
-    db.execute('''
+    ''', commit=True)
+    # Create tasks table
+    execute_query('''
         CREATE TABLE IF NOT EXISTS tasks (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             user_email TEXT NOT NULL,
             name TEXT NOT NULL,
             category TEXT,
@@ -47,105 +115,49 @@ def init_db():
             completed INTEGER DEFAULT 0,
             FOREIGN KEY(user_email) REFERENCES users(email)
         )
-    ''')
-    db.execute('''
-        CREATE TABLE IF NOT EXISTS events (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_email TEXT NOT NULL,
-            date TEXT NOT NULL,
-            title TEXT NOT NULL,
-            type TEXT NOT NULL,
-            FOREIGN KEY(user_email) REFERENCES users(email)
-        )
-    ''')
-    db.commit()
-    db.close()
+    ''', commit=True)
+    app.logger.info("PostgreSQL tables checked/created.")
 
 def get_user_by_email(email):
-    db = get_db()
-    try:
-        return db.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
-    finally:
-        db.close()
+    """Fetches a single user record."""
+    # Note the use of %s placeholder for PostgreSQL
+    return execute_query("SELECT * FROM users WHERE email = %s", (email,), fetch_one=True)
 
 def create_user(fullname, email, password_plain):
+    """Inserts a new user into the database."""
     hashed = generate_password_hash(password_plain)
-    db = get_db()
-    try:
-        db.execute("INSERT INTO users (fullname, email, password) VALUES (?, ?, ?)",
-                   (fullname, email, hashed))
-        db.commit()
-    finally:
-        db.close()
+    execute_query("INSERT INTO users (fullname, email, password) VALUES (%s, %s, %s)",
+                   (fullname, email, hashed), commit=True)
 
 def check_credentials(email, password_plain):
+    """Checks user password against the stored hash."""
     user = get_user_by_email(email)
     if not user:
         return False
+    # Psycopg2 DictCursor rows allow dictionary-like access
     return check_password_hash(user["password"], password_plain)
 
 def add_task_for_user(email, name, category, due_date):
-    db = get_db()
-    try:
-        db.execute("INSERT INTO tasks (user_email, name, category, due_date, completed) VALUES (?, ?, ?, ?, 0)",
-                   (email, name, category, due_date))
-        db.commit()
-    finally:
-        db.close()
+    """Adds a new task for a specified user email."""
+    execute_query("INSERT INTO tasks (user_email, name, category, due_date, completed) VALUES (%s, %s, %s, %s, 0)",
+                   (email, name, category, due_date), commit=True)
 
 def get_tasks_for_user(email):
-    db = get_db()
-    try:
-        rows = db.execute("SELECT * FROM tasks WHERE user_email = ? ORDER BY id DESC", (email,)).fetchall()
-        return rows
-    finally:
-        db.close()
+    """Retrieves all tasks for a specific user."""
+    return execute_query("SELECT * FROM tasks WHERE user_email = %s ORDER BY id DESC", (email,), fetch_all=True)
 
 def set_task_completed(task_id):
-    db = get_db()
-    try:
-        db.execute("UPDATE tasks SET completed = 1 WHERE id = ?", (task_id,))
-        db.commit()
-    finally:
-        db.close()
+    """Marks a specific task as completed."""
+    execute_query("UPDATE tasks SET completed = 1 WHERE id = %s", (task_id,), commit=True)
 
 def delete_task_by_id(task_id):
-    db = get_db()
-    try:
-        db.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
-        db.commit()
-    finally:
-        db.close()
+    """Deletes a task by its ID."""
+    execute_query("DELETE FROM tasks WHERE id = %s", (task_id,), commit=True)
 
-# initialize new DB
+# Initialize new DB (will create tables if they don't exist)
 init_db()
 
-import json
-import os
-
-EVENTS_FILE = "events.json"
-
-def load_events():
-    if not os.path.exists(EVENTS_FILE):
-        return {}
-    with open(EVENTS_FILE, "r") as f:
-        return json.load(f)
-
-def save_event(date, title, desc):
-    events = load_events()
-
-    if date not in events:
-        events[date] = []
-
-    events[date].append({
-        "title": title,
-        "description": desc
-    })
-
-    with open(EVENTS_FILE, "w") as f:
-        json.dump(events, f, indent=4)
-
-# ------- Routes -------
+# ------- Routes (No changes needed as they rely on updated DB helpers) -------
 @app.route('/')
 def index():
     return render_template('index.html', title='Home')
@@ -217,12 +229,23 @@ def profile():
         return redirect(url_for('profile'))
 
     tasks = get_tasks_for_user(user_email)
+    
+    # NEW LOGIC: Calculate completed and pending tasks for the chart
+    completed_tasks = sum(1 for t in tasks if t['completed'] == 1)
+    pending_tasks = len(tasks) - completed_tasks
+    
+    return render_template(
+        'profile.html', 
+        title='Profile', 
+        user=user_email, 
+        tasks=tasks,
+        # PASS THE NEW VARIABLES TO THE TEMPLATE
+        completed_tasks=completed_tasks,
+        pending_tasks=pending_tasks
+    )
 
-    completed = len([t for t in tasks if t['completed']])
-    total = len(tasks)
-    progress = int((completed / total) * 100) if total > 0 else 0
-
-    return render_template('profile.html', title='Profile', user=user_email, tasks=tasks, progress=progress)
+@app.route('/complete_task/<int:task_id>')
+# ... (rest of app.py)
 
 @app.route('/wellness')
 def wellness():
@@ -296,4 +319,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
