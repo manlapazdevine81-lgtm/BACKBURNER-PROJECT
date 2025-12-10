@@ -1,0 +1,21 @@
+id,name,email,role,created_at
+1,Juan Dela Cruz,juan@example.com,Student,2025-12-10
+2,Maria Santos,maria@example.com,Student,2025-12-10
+3,Pedro Reyes,pedro@example.com,Student,2025-12-10
+4,Ana Lopez,ana@example.com,Teacher,2025-12-10
+5,Luis Garcia,luis@example.com,Teacher,2025-12-10
+6,Cathy Ramos,cathy@example.com,Student,2025-12-10
+7,Mark Villanueva,mark@example.com,Student,2025-12-10
+8,Ella Cruz,ella@example.com,Student,2025-12-10
+9,John Paul,john@example.com,Teacher,2025-12-10
+10,Grace Lim,grace@example.com,Student,2025-12-10
+11,Rico Tan,rico@example.com,Student,2025-12-10
+12,Lara Mae,lara@example.com,Student,2025-12-10
+13,Kevin Ong,kevin@example.com,Student,2025-12-10
+14,Joy Bautista,joy@example.com,Teacher,2025-12-10
+15,Nico Santos,nico@example.com,Student,2025-12-10
+16,Tina Lopez,tina@example.com,Student,2025-12-10
+17,Carlo Reyes,carlo@example.com,Student,2025-12-10
+18,Vina Dela Cruz,vina@example.com,Teacher,2025-12-10
+19,Marco Tan,marco@example.com,Student,2025-12-10
+20,Ella Mae,ellamae@example.com,Student,2025-12-10

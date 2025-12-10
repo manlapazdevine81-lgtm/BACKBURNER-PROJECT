@@ -1,0 +1,21 @@
+id,title,description,user_id,due_date,status
+1,Finish Project Proposal,Complete the proposal for submission,1,2025-12-15,Pending
+2,Submit Assignment,Math assignment due,2,2025-12-12,Completed
+3,Prepare Presentation,Prepare slides for group presentation,3,2025-12-14,Pending
+4,Grade Exams,Grade student exams,4,2025-12-13,In Progress
+5,Research Topic,Research for final paper,5,2025-12-18,Pending
+6,Team Meeting,Discuss project updates,6,2025-12-10,Completed
+7,Update Database,Update records in system,7,2025-12-16,Pending
+8,Fix Bug,Resolve issue in app,8,2025-12-11,In Progress
+9,Design Logo,Create logo for project,9,2025-12-20,Pending
+10,Plan Event,Plan student event,10,2025-12-19,Pending
+11,Write Report,Complete report for project,11,2025-12-14,Completed
+12,Submit Exam Scores,Upload scores to portal,12,2025-12-12,Pending
+13,Prepare Quiz,Create quiz questions,13,2025-12-13,Pending
+14,Organize Files,Organize project files,14,2025-12-15,Completed
+15,Create Tutorial,Make tutorial video,15,2025-12-17,Pending
+16,Update Website,Update content on website,16,2025-12-16,In Progress
+17,Send Emails,Send reminder emails,17,2025-12-18,Pending
+18,Design Banner,Banner for school event,18,2025-12-19,Pending
+19,Record Video,Record instructional video,19,2025-12-20,Pending
+20,Prepare Survey,Survey for students,20,2025-12-21,Pending
