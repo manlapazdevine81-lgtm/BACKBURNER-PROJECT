@@ -1,0 +1,23 @@
+[
+  {"id":1,"name":"Juan Dela Cruz","email":"juan@example.com","role":"Student"},
+  {"id":2,"name":"Maria Santos","email":"maria@example.com","role":"Student"},
+  {"id":3,"name":"Pedro Reyes","email":"pedro@example.com","role":"Student"},
+  {"id":4,"name":"Ana Lopez","email":"ana@example.com","role":"Teacher"},
+  {"id":5,"name":"Luis Garcia","email":"luis@example.com","role":"Teacher"},
+  {"id":6,"name":"Cathy Ramos","email":"cathy@example.com","role":"Student"},
+  {"id":7,"name":"Mark Villanueva","email":"mark@example.com","role":"Student"},
+  {"id":8,"name":"Ella Cruz","email":"ella@example.com","role":"Student"},
+  {"id":9,"name":"John Paul","email":"john@example.com","role":"Teacher"},
+  {"id":10,"name":"Grace Lim","email":"grace@example.com","role":"Student"},
+  {"id":11,"name":"Rico Tan","email":"rico@example.com","role":"Student"},
+  {"id":12,"name":"Lara Mae","email":"lara@example.com","role":"Student"},
+  {"id":13,"name":"Kevin Ong","email":"kevin@example.com","role":"Student"},
+  {"id":14,"name":"Joy Bautista","email":"joy@example.com","role":"Teacher"},
+  {"id":15,"name":"Nico Santos","email":"nico@example.com","role":"Student"},
+  {"id":16,"name":"Tina Lopez","email":"tina@example.com","role":"Student"},
+  {"id":17,"name":"Carlo Reyes","email":"carlo@example.com","role":"Student"},
+  {"id":18,"name":"Vina Dela Cruz","email":"vina@example.com","role":"Teacher"},
+  {"id":19,"name":"Marco Tan","email":"marco@example.com","role":"Student"},
+  {"id":20,"name":"Ella Mae","email":"ellamae@example.com","role":"Student"}
+]
+

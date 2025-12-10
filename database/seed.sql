@@ -62,33 +62,3 @@ INSERT INTO tasks (title, description, user_id, due_date, status) VALUES
 ('Record Video', 'Record instructional video', 19, '2025-12-20', 'Pending'),
 ('Prepare Survey', 'Survey for students', 20, '2025-12-21', 'Pending');
 
--- COURSES TABLE
-CREATE TABLE IF NOT EXISTS courses (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    course_name TEXT NOT NULL,
-    instructor TEXT,
-    start_date TEXT,
-    end_date TEXT
-);
-
-INSERT INTO courses (course_name, instructor, start_date, end_date) VALUES
-('Programming 101', 'Ana Lopez', '2025-09-01', '2025-12-15'),
-('Math 101', 'Luis Garcia', '2025-09-01', '2025-12-15'),
-('English 101', 'John Paul', '2025-09-01', '2025-12-15'),
-('Science 101', 'Joy Bautista', '2025-09-01', '2025-12-15'),
-('History 101', 'Vina Dela Cruz', '2025-09-01', '2025-12-15'),
-('Art 101', 'Ana Lopez', '2025-09-01', '2025-12-15'),
-('Music 101', 'Luis Garcia', '2025-09-01', '2025-12-15'),
-('PE 101', 'John Paul', '2025-09-01', '2025-12-15'),
-('IT 101', 'Joy Bautista', '2025-09-01', '2025-12-15'),
-('Filipino 101', 'Vina Dela Cruz', '2025-09-01', '2025-12-15'),
-('Economics 101', 'Ana Lopez', '2025-09-01', '2025-12-15'),
-('Psychology 101', 'Luis Garcia', '2025-09-01', '2025-12-15'),
-('Sociology 101', 'John Paul', '2025-09-01', '2025-12-15'),
-('Philosophy 101', 'Joy Bautista', '2025-09-01', '2025-12-15'),
-('Marketing 101', 'Vina Dela Cruz', '2025-09-01', '2025-12-15'),
-('Finance 101', 'Ana Lopez', '2025-09-01', '2025-12-15'),
-('Law 101', 'Luis Garcia', '2025-09-01', '2025-12-15'),
-('Engineering 101', 'John Paul', '2025-09-01', '2025-12-15'),
-('Design 101', 'Joy Bautista', '2025-09-01', '2025-12-15'),
-('Statistics 101', 'Vina Dela Cruz', '2025-09-01', '2025-12-15');

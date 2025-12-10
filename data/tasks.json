@@ -1,0 +1,23 @@
+[
+  {"id":1,"title":"Finish Project Proposal","description":"Complete the proposal for submission","user_id":1,"due_date":"2025-12-15","status":"Pending"},
+  {"id":2,"title":"Submit Assignment","description":"Math assignment due","user_id":2,"due_date":"2025-12-12","status":"Completed"},
+  {"id":3,"title":"Prepare Presentation","description":"Prepare slides for group presentation","user_id":3,"due_date":"2025-12-14","status":"Pending"},
+  {"id":4,"title":"Grade Exams","description":"Grade student exams","user_id":4,"due_date":"2025-12-13","status":"In Progress"},
+  {"id":5,"title":"Research Topic","description":"Research for final paper","user_id":5,"due_date":"2025-12-18","status":"Pending"},
+  {"id":6,"title":"Team Meeting","description":"Discuss project updates","user_id":6,"due_date":"2025-12-10","status":"Completed"},
+  {"id":7,"title":"Update Database","description":"Update records in system","user_id":7,"due_date":"2025-12-16","status":"Pending"},
+  {"id":8,"title":"Fix Bug","description":"Resolve issue in app","user_id":8,"due_date":"2025-12-11","status":"In Progress"},
+  {"id":9,"title":"Design Logo","description":"Create logo for project","user_id":9,"due_date":"2025-12-20","status":"Pending"},
+  {"id":10,"title":"Plan Event","description":"Plan student event","user_id":10,"due_date":"2025-12-19","status":"Pending"},
+  {"id":11,"title":"Write Report","description":"Complete report for project","user_id":11,"due_date":"2025-12-14","status":"Completed"},
+  {"id":12,"title":"Submit Exam Scores","description":"Upload scores to portal","user_id":12,"due_date":"2025-12-12","status":"Pending"},
+  {"id":13,"title":"Prepare Quiz","description":"Create quiz questions","user_id":13,"due_date":"2025-12-13","status":"Pending"},
+  {"id":14,"title":"Organize Files","description":"Organize project files","user_id":14,"due_date":"2025-12-15","status":"Completed"},
+  {"id":15,"title":"Create Tutorial","description":"Make tutorial video","user_id":15,"due_date":"2025-12-17","status":"Pending"},
+  {"id":16,"title":"Update Website","description":"Update content on website","user_id":16,"due_date":"2025-12-16","status":"In Progress"},
+  {"id":17,"title":"Send Emails","description":"Send reminder emails","user_id":17,"due_date":"2025-12-18","status":"Pending"},
+  {"id":18,"title":"Design Banner","description":"Banner for school event","user_id":18,"due_date":"2025-12-19","status":"Pending"},
+  {"id":19,"title":"Record Video","description":"Record instructional video","user_id":19,"due_date":"2025-12-20","status":"Pending"},
+  {"id":20,"title":"Prepare Survey","description":"Survey for students","user_id":20,"due_date":"2025-12-21","status":"Pending"}
+]
+
