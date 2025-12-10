@@ -1,10 +1,10 @@
--- USERS TABLE
+-- Users Table --
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     role TEXT NOT NULL,
-    created_at TEXT DEFAULT (DATE('now'))
+    created_at TEXT DEFAULT (date('now'))
 );
 
 INSERT INTO users (name, email, role) VALUES
@@ -29,7 +29,7 @@ INSERT INTO users (name, email, role) VALUES
 ('Marco Tan', 'marco@example.com', 'Student'),
 ('Ella Mae', 'ellamae@example.com', 'Student');
 
--- TASKS TABLE
+-- Tasks Table --
 CREATE TABLE IF NOT EXISTS tasks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
@@ -61,4 +61,3 @@ INSERT INTO tasks (title, description, user_id, due_date, status) VALUES
 ('Design Banner', 'Banner for school event', 18, '2025-12-19', 'Pending'),
 ('Record Video', 'Record instructional video', 19, '2025-12-20', 'Pending'),
 ('Prepare Survey', 'Survey for students', 20, '2025-12-21', 'Pending');
-
