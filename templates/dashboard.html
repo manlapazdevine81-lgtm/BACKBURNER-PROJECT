@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="glass-card mood-top-card">
-    <h3>How are you feeling today? 🌿</h3>
-    <button class="feature-btn" onclick="openMoodTracker()">Track Mood</button>
-</div>
-
 <!--Dashboard-->
 <div class="glass-dashboard">
 
@@ -56,22 +51,7 @@
 </div>
 <!-- END OF DASHBOARD -->
 
-<!-- MOOD TRACKER MODAL -->
-<div id="moodModal" class="mood-modal">
-    <div class="mood-content">
-        <h2>How are you feeling today? 🌿</h2>
 
-        <div class="mood-options">
-            <button class="mood-btn" data-mood="Happy">😊</button>
-            <button class="mood-btn" data-mood="Calm">😌</button>
-            <button class="mood-btn" data-mood="Stressed">😣</button>
-            <button class="mood-btn" data-mood="Sad">😢</button>
-            <button class="mood-btn" data-mood="Tired">🥱</button>
-        </div>
-
-        <button class="mood-close" onclick="closeMoodTracker()">Close</button>
-    </div>
-</div>
 
 
 {% endblock %}
