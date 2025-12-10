@@ -11,6 +11,24 @@ load_dotenv()  # This loads the variables from .env
 import psycopg2 
 from psycopg2 import extras # Used for dictionary-like rows
 
+# ------- Wellness Tips & Daily Quotes -------
+WELLNESS_TIPS_MOOD = {
+    "happy": ["Keep doing what works today!", "Share positivity—give someone a compliment.", "Write one thing you're grateful for."],
+    "sad": ["Listen to your favorite song.", "Take a 10-minute walk outside.", "Write something good that happened today."],
+    "stressed": ["Do a 5-minute breathing exercise.", "Drink a glass of water.", "Stretch your shoulders and neck."],
+    "tired": ["Do light stretching for 3 minutes.", "Close your eyes and breathe deeply.", "Avoid heavy tasks for the next 15 minutes."],
+    "anxious": ["Try belly breathing (inhale 4 sec, exhale 6 sec).", "List your top 3 worries.", "Avoid social media for one hour."]
+}
+
+DAILY_QUOTES = [
+    "Every day is a new beginning.",
+    "Small steps lead to big changes.",
+    "You are stronger than you think.",
+    "Your feelings are valid.",
+    "Progress, not perfection."
+]
+
+
 app = Flask(__name__)
 app.secret_key = "kalma_secret_key"
 
@@ -251,7 +269,12 @@ def profile():
 
 @app.route('/wellness')
 def wellness():
-    return render_template('wellness.html')
+    return render_template(
+        'wellness.html',
+        moods=list(WELLNESS_TIPS_MOOD.keys()),
+        tips=WELLNESS_TIPS_MOOD,
+        quotes=DAILY_QUOTES
+    )
 
 @app.route('/complete_task/<int:task_id>')
 def complete_task(task_id):
