@@ -49,21 +49,21 @@ def save_event(date, title, desc):
 # ------- DB helpers (Updated for PostgreSQL) -------
 
 def get_db_conn():
-    """Establishes a connection to the PostgreSQL database."""
+    """Establishes a connection to the PostgreSQL database via Supabase Session Pooler."""
     try:
-        # Use connection string or individual parameters
         conn = psycopg2.connect(
-            host=DB_HOST, 
-            database=DB_NAME, 
-            user=DB_USER, 
-            password=DB_PASS
+            host=DB_HOST,
+            database=DB_NAME,
+            user=DB_USER,
+            password=DB_PASS,
+            port=5432,
+            sslmode="require"  # Required for Supabase
         )
         return conn
     except psycopg2.Error as e:
         app.logger.error("Could not connect to PostgreSQL: %s", e)
-        # Re-raise the exception to inform the caller
         raise
-
+    
 def execute_query(query, params=None, fetch_one=False, fetch_all=False, commit=False):
     """A generic helper to execute a query, handling connection/cursor."""
     conn = None
