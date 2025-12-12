@@ -12,7 +12,7 @@
         <div class="feature-card">
             <h3>🧠 Mood Tracker</h3>
             <p>Track your emotional wellness each day.</p>
-            <button class="feature-btn" onclick="openMoodTracker()">Open</button>
+            <button class="feature-btn" id="openMood">Open</button>
         </div>
 
         <div class="feature-card">
@@ -51,9 +51,75 @@
 </div>
 <!-- END OF DASHBOARD -->
 
+<!-- Styled Mood Tracker Modal -->
+<div id="moodModal" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+">
+    <div style="
+        background: #fefefe;
+        padding:30px;
+        border-radius:20px;
+        text-align:center;
+        max-width:400px;
+        margin:auto;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        font-family: 'Segoe UI', sans-serif;
+    ">
+        <h2 style="margin-bottom:20px; color:#4caf50;">How are you feeling today?</h2>
 
+        <div style="display:flex; justify-content:space-around; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+            <button onclick="selectMood('happy')" style="background:#ffeb3b; border:none; padding:15px; border-radius:50%; font-size:24px; cursor:pointer; transition: transform 0.2s;">😃</button>
+            <button onclick="selectMood('sad')" style="background:#03a9f4; border:none; padding:15px; border-radius:50%; font-size:24px; cursor:pointer; color:white; transition: transform 0.2s;">😔</button>
+            <button onclick="selectMood('stressed')" style="background:#f44336; border:none; padding:15px; border-radius:50%; font-size:24px; cursor:pointer; color:white; transition: transform 0.2s;">😫</button>
+            <button onclick="selectMood('tired')" style="background:#9c27b0; border:none; padding:15px; border-radius:50%; font-size:24px; cursor:pointer; color:white; transition: transform 0.2s;">😴</button>
+            <button onclick="selectMood('anxious')" style="background:#ff9800; border:none; padding:15px; border-radius:50%; font-size:24px; cursor:pointer; color:white; transition: transform 0.2s;">😟</button>
+        </div>
 
+        <p id="moodTip" style="margin-top:15px; font-weight:bold; font-size:16px; color:#555;"></p>
+
+        <button onclick="closeMood()" style="
+            margin-top:20px;
+            background:#4caf50;
+            color:white;
+            border:none;
+            padding:10px 20px;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:16px;
+            transition: background 0.2s;
+        " onmouseover="this.style.background='#45a049'" onmouseout="this.style.background='#4caf50'">Close</button>
+    </div>
+</div>
+
+<script>
+const openBtn = document.getElementById('openMood');
+const modal = document.getElementById('moodModal');
+const tip = document.getElementById('moodTip');
+
+openBtn.addEventListener('click', () => {
+    modal.style.display = 'flex';
+});
+
+function closeMood() {
+    modal.style.display = 'none';
+}
+
+const WELLNESS_TIPS = {{ tips|tojson }};
+
+function selectMood(mood) {
+    const tips = WELLNESS_TIPS[mood];
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+    tip.textContent = randomTip;
+}
+</script>
 
 {% endblock %}
-
-

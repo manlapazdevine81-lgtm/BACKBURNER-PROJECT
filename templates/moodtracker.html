@@ -1,0 +1,13 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<select id="mood">
+    {% for mood in moods %}
+    <option value="{{ mood }}">{{ mood.capitalize() }}</option>
+    {% endfor %}
+</select>
+
+<script>
+const WELLNESS_TIPS = {{ tips|tojson }};
+const QUOTES = {{ quotes|tojson }};
+</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>

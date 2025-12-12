@@ -11,6 +11,54 @@ load_dotenv()  # This loads the variables from .env
 import psycopg2 
 from psycopg2 import extras # Used for dictionary-like rows
 
+# ------- Wellness Tips & Daily Quotes -------
+WELLNESS_TIPS_MOOD = {
+    "happy": [
+        "😄 Nice!! Keep being happy and share the joy!",
+        "🌟 Your positivity is contagious today!",
+        "💌 Smile and make someone else’s day better!",
+        "🎉 Celebrate the little wins, they matter!",
+        "😊 Keep shining—your happiness inspires others!"
+    ],
+    "sad": [
+        "🌈 It’s okay to feel sad. Take a deep breath and relax.",
+        "🎵 Listen to your favorite song and let yourself feel.",
+        "💛 Remember, small moments of joy can still happen today.",
+        "🌿 Even a short walk can lift your spirits.",
+        "🕊️ Be kind to yourself today; you’re doing your best."
+    ],
+    "stressed": [
+        "🧘 Take a 5-minute break and breathe deeply.",
+        "💧 Hydrate and stretch—your body will thank you!",
+        "🌿 Focus on one small task at a time.",
+        "⚡ Remember: pausing is productive too!",
+        "🌸 Clear your mind with a few slow breaths."
+    ],
+    "tired": [
+        "😴 A short rest can recharge your energy.",
+        "☕ Have a warm drink and relax for a few minutes.",
+        "🛋️ Light stretching might help you feel awake.",
+        "🌙 Take it easy—you’ve earned a little break.",
+        "💤 Close your eyes for a moment and refresh your mind."
+    ],
+    "anxious": [
+        "🌸 Breathe in slowly and exhale calmly.",
+        "📋 Focus on one thing you can control right now.",
+        "💖 You are safe, and this feeling will pass.",
+        "🕊️ Ground yourself: notice five things around you.",
+        "🌿 Remind yourself: you’ve handled challenges before, you can handle this too."
+    ]
+}
+
+DAILY_QUOTES = [
+    "🌞 Every day is a fresh start.",
+    "🚶 Small steps lead to big changes.",
+    "💪 You are stronger than you think.",
+    "💖 Your feelings are valid.",
+    "🏆 Progress, not perfection."
+]
+
+
 app = Flask(__name__)
 app.secret_key = "kalma_secret_key"
 
@@ -214,7 +262,14 @@ def dashboard():
         return redirect(url_for('login'))
     user_row = get_user_by_email(session['user'])
     fullname = user_row['fullname'] if user_row else session['user']
-    return render_template('dashboard.html', title='Dashboard', user=fullname)
+    return render_template(
+        'dashboard.html', 
+        title='Dashboard', 
+        user=fullname,
+        moods=list(WELLNESS_TIPS_MOOD.keys()),
+        tips=WELLNESS_TIPS_MOOD,
+        quotes=DAILY_QUOTES
+    )
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -251,7 +306,12 @@ def profile():
 
 @app.route('/wellness')
 def wellness():
-    return render_template('wellness.html')
+    return render_template(
+        'wellness.html',
+        moods=list(WELLNESS_TIPS_MOOD.keys()),
+        tips=WELLNESS_TIPS_MOOD,
+        quotes=DAILY_QUOTES
+    )
 
 @app.route('/complete_task/<int:task_id>')
 def complete_task(task_id):
