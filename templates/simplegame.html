@@ -5,64 +5,103 @@
 <title>Stress Relief Mini Games</title>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap');
+    
+    * { box-sizing: border-box; }
+    
     body {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f4f4f4;
+        font-family: 'Nunito', sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        min-height: 100vh;
+        overflow-x: hidden;
     }
 
     header {
-        background: #c63d4a;
+        background: linear-gradient(90deg, #e94560, #ff6b6b);
         color: white;
-        padding: 15px;
+        padding: 20px;
         text-align: center;
-        font-size: 26px;
+        font-size: 32px;
         font-weight: bold;
+        font-family: 'Fredoka One', cursive;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 20px rgba(233, 69, 96, 0.5);
     }
 
     .screen {
         display: none;
-        padding: 40px;
+        padding: 30px;
         text-align: center;
     }
 
     #menu-screen {
-        display: block; /* Start here */
+        display: block;
     }
 
     .menu-box {
-        width: 350px;
-        margin: 60px auto;
-        background: #fff;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0px 0px 12px rgba(0,0,0,0.15);
+        width: 400px;
+        margin: 40px auto;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .menu-box h2 {
+        color: white;
+        font-family: 'Fredoka One', cursive;
+        font-size: 28px;
+        margin-bottom: 30px;
     }
 
     .menu-btn {
         width: 100%;
-        padding: 12px;
+        padding: 15px;
         margin-top: 15px;
         font-size: 18px;
+        font-weight: bold;
         border: none;
-        border-radius: 8px;
-        background: #c63d4a;
+        border-radius: 12px;
+        background: linear-gradient(90deg, #e94560, #ff6b6b);
         color: white;
         cursor: pointer;
-        transition: 0.2s;
+        transition: all 0.3s ease;
+        font-family: 'Nunito', sans-serif;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .menu-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.5s;
+    }
+
+    .menu-btn:hover::before {
+        left: 100%;
     }
 
     .menu-btn:hover {
-        background: #a2313c;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(233, 69, 96, 0.4);
     }
 
     #game-area {
-        width: 90%;
+        width: 95%;
+        max-width: 800px;
         margin: 0 auto;
-        background: #fff;
-        border-radius: 12px;
-        padding: 25px;
-        box-shadow: 0px 0px 12px rgba(0,0,0,0.15);
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         min-height: 500px;
         position: relative;
         overflow: hidden;
@@ -72,74 +111,351 @@
         position: absolute;
         top: 20px;
         left: 20px;
-        padding: 8px 15px;
-        background: #c63d4a;
+        padding: 12px 24px;
+        background: linear-gradient(90deg, #e94560, #ff6b6b);
         color: white;
         border: none;
-        border-radius: 6px;
+        border-radius: 25px;
         cursor: pointer;
+        font-weight: bold;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        z-index: 100;
+    }
+
+    .back-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+    }
+
+    /* Score Display */
+    .score-panel {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 18px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Timer Display */
+    .timer-panel {
+        position: absolute;
+        top: 20px;
+        right: 140px;
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 18px;
+        box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
     }
 
     /* Bubble style */
     .bubble {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
-        background: rgba(135,206,235,0.7);
+        background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(135,206,235,0.6));
         position: absolute;
         cursor: pointer;
-        transition: 0.2s;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(135, 206, 235, 0.5), inset -5px -5px 15px rgba(0,0,0,0.1);
+        animation: float 3s ease-in-out infinite;
     }
-    .bubble:hover { transform: scale(1.2); }
+
+    .bubble:hover {
+        transform: scale(1.2);
+    }
+
+    .bubble.pop {
+        animation: pop 0.3s ease-out forwards;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pop {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.3); }
+        100% { transform: scale(0); opacity: 0; }
+    }
 
     /* Memory Card Grid */
     .card-grid {
         display: grid;
-        grid-template-columns: repeat(4, 100px);
-        gap: 10px;
+        grid-template-columns: repeat(4, 90px);
+        gap: 12px;
         justify-content: center;
         margin-top: 20px;
     }
 
     .card {
-        width: 100px;
-        height: 100px;
-        background: #c63d4a;
-        border-radius: 10px;
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 15px;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 28px;
+        font-size: 36px;
         color: white;
         cursor: pointer;
+        transition: all 0.3s ease;
+        transform-style: preserve-3d;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
     }
 
     .card.flipped {
-        background: #eee;
+        background: linear-gradient(135deg, #a8edea, #fed6e3);
         color: #333;
+        transform: rotateY(180deg);
+    }
+
+    .card.matched {
+        background: linear-gradient(135deg, #11998e, #38ef7d);
+        animation: matchPulse 0.5s ease;
+    }
+
+    @keyframes matchPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
     }
 
     /* Typing Game */
     #typingInput {
-        padding: 10px;
-        font-size: 22px;
+        padding: 15px;
+        font-size: 24px;
         width: 300px;
         margin-top: 20px;
+        border: 3px solid #667eea;
+        border-radius: 12px;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    #typingInput:focus {
+        border-color: #e94560;
+        box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
+    }
+
+    .word-display {
+        font-size: 42px;
+        font-weight: bold;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 20px 0;
+    }
+
+    /* New Games */
+    .game-title {
+        font-family: 'Fredoka One', cursive;
+        font-size: 36px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .game-subtitle {
+        color: #666;
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    /* Snake Game */
+    #snakeCanvas {
+        border: 3px solid #667eea;
+        border-radius: 10px;
+        background: #1a1a2e;
+    }
+
+    /* Reaction Game */
+    .reaction-btn {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: none;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .reaction-btn.wait {
+        background: #e94560;
+    }
+
+    .reaction-btn.go {
+        background: #38ef7d;
+    }
+
+    .reaction-btn.click {
+        animation: clickPulse 0.2s ease;
+    }
+
+    @keyframes clickPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(0.95); }
+        100% { transform: scale(1); }
+    }
+
+    /* Confetti */
+    .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        top: -10px;
+        animation: confettiFall 3s linear forwards;
+    }
+
+    @keyframes confettiFall {
+        to {
+            transform: translateY(100vh) rotate(720deg);
+        }
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+        width: 100%;
+        height: 20px;
+        background: #eee;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 15px 0;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        transition: width 0.3s ease;
+    }
+
+    /* Level Badge */
+    .level-badge {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, #ffd700, #ffaa00);
+        color: #333;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    }
+
+    /* Sound toggle */
+    .sound-toggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255,255,255,0.2);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    /* Custom Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-overlay.show {
+        display: flex;
+    }
+
+    .modal-content {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        padding: 40px 50px;
+        border-radius: 25px;
+        text-align: center;
+        color: white;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        animation: modalPop 0.3s ease;
+        max-width: 90%;
+    }
+
+    @keyframes modalPop {
+        0% { transform: scale(0.5); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content h2 {
+        font-family: 'Fredoka One', cursive;
+        font-size: 36px;
+        margin: 0 0 15px 0;
+    }
+
+    .modal-content p {
+        font-size: 20px;
+        margin: 10px 0;
+    }
+
+    .modal-content .score-display {
+        font-size: 48px;
+        font-weight: bold;
+        color: #ffd700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .modal-btn {
+        margin-top: 25px;
+        padding: 15px 40px;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        border-radius: 30px;
+        background: white;
+        color: #667eea;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .modal-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     }
 </style>
 </head>
 
 <body>
 
-<header>Stress Relief Mini Games</header>
+<header>🎮 Stress Relief Mini Games</header>
 
 <!-- MAIN MENU SCREEN -->
 <div id="menu-screen" class="screen">
     <div class="menu-box">
-        <h2>Select a Game</h2>
-        <button class="menu-btn" onclick="loadGame('bubble')">Bubble Pop</button>
-        <button class="menu-btn" onclick="loadGame('typing')">Typing Speed</button>
-        <button class="menu-btn" onclick="loadGame('memory')">Memory Card Flip</button>
+        <h2>Choose a Game!</h2>
+        <button class="menu-btn" onclick="loadGame('bubble')">🫧 Bubble Pop</button>
+        <button class="menu-btn" onclick="loadGame('typing')">⌨️ Typing Speed</button>
+        <button class="menu-btn" onclick="loadGame('memory')">🃏 Memory Match</button>
+        <button class="menu-btn" onclick="loadGame('snake')">🐍 Snake Game</button>
+        <button class="menu-btn" onclick="loadGame('reaction')">⚡ Reaction Test</button>
     </div>
 </div>
 
@@ -149,136 +465,529 @@
     <div id="game-area"></div>
 </div>
 
+<!-- CUSTOM MODAL -->
+<div id="modal-overlay" class="modal-overlay">
+    <div class="modal-content">
+        <h2 id="modal-title">🎉 Great Job!</h2>
+        <p id="modal-message">Your Score</p>
+        <div id="modal-score" class="score-display">0</div>
+        <button class="modal-btn" onclick="closeModal()">Continue</button>
+    </div>
+</div>
+
 <script>
+/* ----------- GLOBAL STATE ----------- */
+let gameState = {
+    score: 0,
+    level: 1,
+    timeLeft: 60,
+    timerInterval: null,
+    soundEnabled: true
+};
+
+/* ----------- MODAL FUNCTIONS ----------- */
+function showModal(title, message, score, callback) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-message').textContent = message;
+    document.getElementById('modal-score').textContent = score;
+    document.getElementById('modal-overlay').classList.add('show');
+    
+    // Store callback for continue button
+    document.getElementById('modal-overlay').dataset.callback = callback ? 'true' : 'false';
+    document.getElementById('modal-overlay').onclick = function(e) {
+        if (e.target === this) {
+            if (callback) callback();
+        }
+    };
+}
+
+function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('show');
+    const overlay = document.getElementById('modal-overlay');
+    if (overlay.dataset.callback === 'true') {
+        overlay.dataset.callback = 'false';
+    }
+}
+
+/* ----------- SOUND EFFECTS ----------- */
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSound(type) {
+    if (!gameState.soundEnabled) return;
+    
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    switch(type) {
+        case 'pop':
+            oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1);
+            break;
+        case 'match':
+            oscillator.frequency.setValueAtTime(523, audioCtx.currentTime);
+            oscillator.frequency.setValueAtTime(659, audioCtx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(784, audioCtx.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.3);
+            break;
+        case 'wrong':
+            oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.2);
+            break;
+        case 'levelup':
+            oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+            oscillator.frequency.setValueAtTime(554, audioCtx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(659, audioCtx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(784, audioCtx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.4);
+            break;
+    }
+}
+
+/* ----------- CONFETTI EFFECT ----------- */
+function createConfetti() {
+    const colors = ['#e94560', '#667eea', '#38ef7d', '#ffd700', '#ff6b6b'];
+    
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 4000);
+    }
+}
 
 /* ----------- NAVIGATION ----------- */
 function loadGame(type) {
+    // Reset game state
+    gameState.score = 0;
+    gameState.level = 1;
+    gameState.timeLeft = 60;
+    if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+    
     document.getElementById("menu-screen").style.display = "none";
     document.getElementById("game-screen").style.display = "block";
 
     if (type === "bubble") startBubblePop();
     if (type === "typing") startTypingGame();
     if (type === "memory") startMemoryGame();
+    if (type === "snake") startSnakeGame();
+    if (type === "reaction") startReactionGame();
 }
 
 function goBack() {
+    if (gameState.timerInterval) clearInterval(gameState.timerInterval);
     document.getElementById("game-screen").style.display = "none";
     document.getElementById("menu-screen").style.display = "block";
+}
+
+function updateScore(points) {
+    gameState.score += points;
+    const scorePanel = document.getElementById('score-panel');
+    if (scorePanel) scorePanel.textContent = `⭐ ${gameState.score}`;
+}
+
+function startTimer(seconds, callback) {
+    gameState.timeLeft = seconds;
+    const timerPanel = document.getElementById('timer-panel');
+    
+    gameState.timerInterval = setInterval(() => {
+        gameState.timeLeft--;
+        if (timerPanel) timerPanel.textContent = `⏱️ ${gameState.timeLeft}s`;
+        
+        if (gameState.timeLeft <= 0) {
+            clearInterval(gameState.timerInterval);
+            if (callback) callback();
+        }
+    }, 1000);
 }
 
 /* ----------- BUBBLE POP GAME ----------- */
 function startBubblePop() {
     const area = document.getElementById("game-area");
-    area.innerHTML = "<h2>Bubble Pop!</h2>";
-
-    for (let i = 0; i < 20; i++) {
+    area.innerHTML = `
+        <div class="level-badge">Level ${gameState.level}</div>
+        <div class="score-panel">⭐ 0</div>
+        <div class="timer-panel">⏱️ 60s</div>
+        <h2 class="game-title">🫧 Bubble Pop!</h2>
+        <p class="game-subtitle">Pop as many bubbles as you can!</p>
+        <div id="bubble-container" style="height: 350px; position: relative; margin-top: 20px;"></div>
+    `;
+    
+    let bubblesPopped = 0;
+    const bubbleCount = 15 + (gameState.level * 5);
+    const container = document.getElementById('bubble-container');
+    
+    for (let i = 0; i < bubbleCount; i++) {
         const bubble = document.createElement("div");
         bubble.className = "bubble";
-        bubble.style.left = Math.random() * 600 + "px";
+        bubble.style.left = Math.random() * (container.offsetWidth - 70) + "px";
         bubble.style.top = Math.random() * 300 + "px";
-        bubble.onclick = () => bubble.remove();
-        area.appendChild(bubble);
+        bubble.style.animationDelay = Math.random() * 2 + "s";
+        
+        const colors = ['rgba(135,206,235,0.7)', 'rgba(255,182,193,0.7)', 'rgba(144,238,144,0.7)', 'rgba(255,218,185,0.7)', 'rgba(221,160,221,0.7)'];
+        bubble.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), ${colors[i % colors.length]})`;
+        
+        bubble.onclick = () => {
+            bubble.classList.add('pop');
+            playSound('pop');
+            setTimeout(() => bubble.remove(), 300);
+            bubblesPopped++;
+            updateScore(10);
+            
+            if (bubblesPopped >= bubbleCount) {
+                setTimeout(() => {
+                    createConfetti();
+                    showModal('🎉 Level Complete!', `Score: ${gameState.score}`, gameState.score, () => {
+                        gameState.level++;
+                        startBubblePop();
+                    });
+                }, 500);
+            }
+        };
+        container.appendChild(bubble);
     }
+    
+    startTimer(60, () => {
+        showModal("⏱️ Time's Up!", "Final Score", gameState.score, () => {
+            gameState.level = 1;
+            gameState.score = 0;
+            goBack();
+        });
+    });
 }
 
-
-let wordList = ["smile", "focus", "relax", "energy", "ocean", "keyboard", "happy", "music", "friends"];
+/* ----------- TYPING GAME ----------- */
+let wordList = [
+    ["smile", "focus", "relax", "energy"], // Level 1
+    ["ocean", "keyboard", "happy", "music", "friends", "bright"], // Level 2
+    ["adventure", "beautiful", "challenge", "discover", "explore", "freedom"], // Level 3
+    ["wonderful", "fantastic", "incredible", "magnificent", "spectacular", "tremendous"] // Level 4+
+];
 
 function startTypingGame() {
     const area = document.getElementById("game-area");
-
-    let word = wordList[Math.floor(Math.random() * wordList.length)];
+    const level = Math.min(gameState.level - 1, wordList.length - 1);
+    const currentWords = wordList[level] || wordList[wordList.length - 1];
+    
+    let word = currentWords[Math.floor(Math.random() * currentWords.length)];
     let startTime = null;
+    let wordsTyped = 0;
 
     area.innerHTML = `
-        <h2>Type it!</h2>
-        <p>Type the word as fast as you can!</p>
-        <div style="font-size:32px; font-weight:bold;" id="wordDisplay">${word}</div>
-        <input id="typingInput" placeholder="Start typing...">
-        <p id="result" style="font-size:20px; font-weight:bold;"></p>
+        <div class="level-badge">Level ${gameState.level}</div>
+        <div class="score-panel">⭐ 0</div>
+        <div class="timer-panel">⏱️ 60s</div>
+        <h2 class="game-title">⌨️ Type It!</h2>
+        <p class="game-subtitle">Type the word as fast as you can!</p>
+        <div class="word-display" id="wordDisplay">${word}</div>
+        <input id="typingInput" placeholder="Start typing..." autofocus>
+        <p id="result" style="font-size:20px; font-weight:bold; color: #667eea;"></p>
     `;
 
     const input = document.getElementById("typingInput");
+    input.focus();
 
     input.addEventListener("input", () => {
         if (!startTime) startTime = Date.now();
 
-        if (input.value === word) {
+        if (input.value.toLowerCase() === word.toLowerCase()) {
             let elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+            let wpm = (1 / elapsed * 60).toFixed(1);
+            
             document.getElementById("result").textContent = 
-                `Great job! You typed it in ${elapsed} seconds 🎉`;
-
-            setTimeout(startTypingGame, 1500);
+                `🎉 Great! ${wpm} WPM - +100 points!`;
+            
+            playSound('match');
+            updateScore(100);
+            wordsTyped++;
+            
+            // Next word
+            setTimeout(() => {
+                word = currentWords[Math.floor(Math.random() * currentWords.length)];
+                document.getElementById("wordDisplay").textContent = word;
+                input.value = '';
+                document.getElementById("result").textContent = '';
+                startTime = null;
+            }, 800);
         }
+    });
+    
+    startTimer(60, () => {
+        showModal("⏱️ Time's Up!", `Words typed: ${wordsTyped}`, gameState.score, () => {
+            gameState.level = 1;
+            gameState.score = 0;
+            goBack();
+        });
     });
 }
 
-
+/* ----------- MEMORY GAME ----------- */
 function startMemoryGame() {
     const area = document.getElementById("game-area");
-    area.innerHTML = "<h2>Match the cards!</h2>";
-
-    let values = [1,1,2,2,3,3,4,4].sort(() => Math.random() - 0.5);
+    const emojis = ['🎮', '🎲', '🎯', '🎨', '🎭', '🎪', '🎫', '🎬'];
+    const levelEmojis = emojis.slice(0, Math.min(4 + Math.floor(gameState.level / 2), 8));
+    
+    let values = [...levelEmojis, ...levelEmojis].sort(() => Math.random() - 0.5);
     let firstCard = null;
     let lock = false;
     let matchedPairs = 0;
+    let moves = 0;
 
-    const grid = document.createElement("div");
-    grid.className = "card-grid";
+    area.innerHTML = `
+        <div class="level-badge">Level ${gameState.level}</div>
+        <div class="score-panel">⭐ 0</div>
+        <h2 class="game-title">🃏 Memory Match</h2>
+        <p class="game-subtitle">Find all matching pairs!</p>
+        <p>Moves: <span id="moves">0</span></p>
+        <div id="memory-grid" class="card-grid"></div>
+    `;
 
-    values.forEach(val => {
+    const grid = document.getElementById('memory-grid');
+    grid.style.gridTemplateColumns = `repeat(${Math.min(levelEmojis.length * 2, 4)}, 90px)`;
+
+    values.forEach((val, idx) => {
         const card = document.createElement("div");
         card.className = "card";
-        card.textContent = "?";
+        card.textContent = "❓";
         card.dataset.value = val;
+        card.dataset.index = idx;
 
         card.onclick = () => {
-            if (lock || card.classList.contains("flipped")) return;
+            if (lock || card.classList.contains('flipped') || card.classList.contains('matched')) return;
 
             card.textContent = val;
-            card.classList.add("flipped");
+            card.classList.add('flipped');
 
             if (!firstCard) {
                 firstCard = card;
             } else {
+                moves++;
+                document.getElementById('moves').textContent = moves;
                 lock = true;
 
                 if (card.dataset.value === firstCard.dataset.value) {
                     // Match found
+                    playSound('match');
+                    setTimeout(() => {
+                        card.classList.add('matched');
+                        firstCard.classList.add('matched');
+                    }, 200);
+                    
                     matchedPairs++;
+                    updateScore(50);
                     firstCard = null;
                     lock = false;
 
-                    // ⭐ Restart when all pairs are matched
-                    if (matchedPairs === values.length / 2) {
+                    if (matchedPairs === levelEmojis.length) {
                         setTimeout(() => {
-                            alert("Great job! Restarting game...");
-                            startMemoryGame();
+                            createConfetti();
+                            let bonus = Math.max(0, 500 - (moves * 10));
+                            updateScore(bonus);
+                            showModal('🎉 Level Complete!', `Moves: ${moves} | Bonus: +${bonus}`, gameState.score, () => {
+                                gameState.level++;
+                                startMemoryGame();
+                            });
                         }, 600);
                     }
-
                 } else {
-                    // Wrong match → flip back
+                    // Wrong match
+                    playSound('wrong');
                     setTimeout(() => {
-                        card.textContent = "?";
-                        card.classList.remove("flipped");
-
-                        firstCard.textContent = "?";
-                        firstCard.classList.remove("flipped");
-
+                        card.textContent = "❓";
+                        card.classList.remove('flipped');
+                        firstCard.textContent = "❓";
+                        firstCard.classList.remove('flipped');
                         firstCard = null;
                         lock = false;
                     }, 800);
                 }
             }
         };
-
         grid.appendChild(card);
     });
-
-    area.appendChild(grid);
 }
 
+/* ----------- SNAKE GAME ----------- */
+function startSnakeGame() {
+    const area = document.getElementById("game-area");
+    
+    area.innerHTML = `
+        <div class="level-badge">Level ${gameState.level}</div>
+        <div class="score-panel">⭐ 0</div>
+        <h2 class="game-title">🐍 Snake Game</h2>
+        <p class="game-subtitle">Use arrow keys to move!</p>
+        <canvas id="snakeCanvas" width="400" height="400"></canvas>
+        <p>Press any arrow key to start</p>
+    `;
+
+    const canvas = document.getElementById('snakeCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    const gridSize = 20;
+    const tileCount = canvas.width / gridSize;
+    
+    let snake = [{x: 10, y: 10}];
+    let food = {x: 15, y: 15};
+    let dx = 0;
+    let dy = 0;
+    let gameRunning = false;
+    let gameLoop;
+
+    function draw() {
+        // Clear
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw food
+        ctx.fillStyle = '#e94560';
+        ctx.beginPath();
+        ctx.arc(food.x * gridSize + gridSize/2, food.y * gridSize + gridSize/2, gridSize/2 - 2, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw snake
+        ctx.fillStyle = '#38ef7d';
+        snake.forEach((segment, i) => {
+            ctx.fillRect(segment.x * gridSize + 1, segment.y * gridSize + 1, gridSize - 2, gridSize - 2);
+        });
+    }
+
+    function update() {
+        if (!gameRunning) return;
+        
+        const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+        
+        // Wall collision
+        if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+            gameRunning = false;
+            clearInterval(gameLoop);
+            showModal('🐍 Game Over!', 'Final Score', gameState.score, () => {
+                gameState.score = 0;
+                goBack();
+            });
+            return;
+        }
+        
+        // Self collision
+        if (snake.some(s => s.x === head.x && s.y === head.y)) {
+            gameRunning = false;
+            clearInterval(gameLoop);
+            showModal('🐍 Game Over!', 'Final Score', gameState.score, () => {
+                gameState.score = 0;
+                goBack();
+            });
+            return;
+        }
+        
+        snake.unshift(head);
+        
+        // Food eaten
+        if (head.x === food.x && head.y === food.y) {
+            playSound('match');
+            updateScore(10);
+            food = {
+                x: Math.floor(Math.random() * tileCount),
+                y: Math.floor(Math.random() * tileCount)
+            };
+        } else {
+            snake.pop();
+        }
+        
+        draw();
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (!gameRunning && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+            gameRunning = true;
+            gameLoop = setInterval(update, 100);
+        }
+        
+        switch(e.key) {
+            case 'ArrowUp': if (dy !== 1) { dx = 0; dy = -1; } break;
+            case 'ArrowDown': if (dy !== -1) { dx = 0; dy = 1; } break;
+            case 'ArrowLeft': if (dx !== 1) { dx = -1; dy = 0; } break;
+            case 'ArrowRight': if (dx !== -1) { dx = 1; dy = 0; } break;
+        }
+    });
+    
+    draw();
+}
+
+/* ----------- REACTION GAME ----------- */
+function startReactionGame() {
+    const area = document.getElementById("game-area");
+    let gameState = { waiting: true, startTime: 0, bestTime: Infinity, attempts: 0 };
+    
+    area.innerHTML = `
+        <div class="score-panel">⭐ 0</div>
+        <h2 class="game-title">⚡ Reaction Test</h2>
+        <p class="game-subtitle">Click as fast as you can when it turns GREEN!</p>
+        <p>Best Time: <span id="bestTime">--</span>ms</p>
+        <button id="reactionBtn" class="reaction-btn wait" style="margin-top: 30px;">Wait...</button>
+    `;
+
+    const btn = document.getElementById('reactionBtn');
+    
+    function scheduleReaction() {
+        const delay = Math.random() * 3000 + 2000;
+        
+        setTimeout(() => {
+            btn.textContent = 'CLICK NOW!';
+            btn.className = 'reaction-btn go';
+            gameState.waiting = false;
+            gameState.startTime = Date.now();
+        }, delay);
+    }
+    
+    btn.onclick = () => {
+        if (gameState.waiting) {
+            // Clicked too early
+            btn.textContent = 'Too early! Wait...';
+            btn.className = 'reaction-btn wait';
+            gameState.waiting = true;
+            setTimeout(scheduleReaction, 1000);
+        } else {
+            // Good click
+            const reactionTime = Date.now() - gameState.startTime;
+            gameState.attempts++;
+            
+            if (reactionTime < gameState.bestTime) {
+                gameState.bestTime = reactionTime;
+                document.getElementById('bestTime').textContent = reactionTime;
+                updateScore(Math.max(0, 500 - reactionTime));
+            }
+            
+            btn.textContent = `${reactionTime}ms! Click to try again`;
+            btn.className = 'reaction-btn';
+            playSound('match');
+            
+            gameState.waiting = true;
+            setTimeout(scheduleReaction, 1500);
+        }
+    };
+    
+    scheduleReaction();
+}
 </script>
 
 </body>

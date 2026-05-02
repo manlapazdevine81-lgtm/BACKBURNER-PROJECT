@@ -1,13 +1,382 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Are You Feeling?</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap');
+        
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-<select id="mood">
-    {% for mood in moods %}
-    <option value="{{ mood }}">{{ mood.capitalize() }}</option>
-    {% endfor %}
-</select>
+        .mood-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 50px 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #667eea;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .mood-btn {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 20px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .mood-btn:hover {
+            transform: translateY(-10px) scale(1.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .mood-btn.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: scale(1.1);
+        }
+
+        .mood-emoji {
+            font-size: 50px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .mood-label {
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .submit-btn {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 50px 40px;
+            border-radius: 30px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+            animation: modalPop 0.4s ease;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .modal-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 32px;
+            margin: 0 0 15px 0;
+        }
+
+        .modal-tip {
+            font-size: 22px;
+            margin: 20px 0;
+            line-height: 1.5;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .modal-quote {
+            font-size: 18px;
+            font-style: italic;
+            opacity: 0.9;
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            background: white;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* History Section */
+        .history-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+
+        .history-title {
+            font-family: 'Fredoka One', cursive;
+            color: #667eea;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .history-list {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .history-item {
+            background: linear-gradient(135deg, #f5f7fa, #e4e8ec);
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .history-emoji {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mood-container">
+    <h1>💭 How Are You Feeling?</h1>
+    <p class="subtitle">Select the emoji that best describes your mood right now</p>
+    
+    <div class="mood-grid">
+        <button class="mood-btn" data-mood="happy">
+            <span class="mood-emoji">😊</span>
+            <span class="mood-label">Happy</span>
+        </button>
+        <button class="mood-btn" data-mood="sad">
+            <span class="mood-emoji">😢</span>
+            <span class="mood-label">Sad</span>
+        </button>
+        <button class="mood-btn" data-mood="stressed">
+            <span class="mood-emoji">😰</span>
+            <span class="mood-label">Stressed</span>
+        </button>
+        <button class="mood-btn" data-mood="tired">
+            <span class="mood-emoji">😴</span>
+            <span class="mood-label">Tired</span>
+        </button>
+        <button class="mood-btn" data-mood="anxious">
+            <span class="mood-emoji">😟</span>
+            <span class="mood-label">Anxious</span>
+        </button>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" disabled>Share Your Mood</button>
+
+    {% if mood_history %}
+    <div class="history-section">
+        <h3 class="history-title">📊 Your Recent Moods</h3>
+        <div class="history-list">
+            {% for entry in mood_history %}
+            <div class="history-item">
+                <span class="history-emoji">
+                    {% if entry.mood == 'happy' %}😊
+                    {% elif entry.mood == 'sad' %}😢
+                    {% elif entry.mood == 'stressed' %}😰
+                    {% elif entry.mood == 'tired' %}😴
+                    {% elif entry.mood == 'anxious' %}😟
+                    {% endif %}
+                </span>
+                <br><small>{{ entry.date }}</small>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Mood Result Modal -->
+<div id="moodModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-emoji" id="modalEmoji">😊</div>
+        <h2 class="modal-title" id="modalTitle">You're Feeling Happy!</h2>
+        <div class="modal-tip" id="modalTip">
+            🌟 Your positivity is contagious today!
+        </div>
+        <div class="modal-quote" id="modalQuote">
+            "Every day is a fresh start." 🌞
+        </div>
+        <button class="modal-btn" onclick="closeMoodModal()">Thank you! 💜</button>
+    </div>
+</div>
 
 <script>
 const WELLNESS_TIPS = {{ tips|tojson }};
 const QUOTES = {{ quotes|tojson }};
+
+let selectedMood = null;
+
+// Mood button click handlers
+document.querySelectorAll('.mood-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Remove selected class from all
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+        // Add selected class to clicked button
+        btn.classList.add('selected');
+        // Store selected mood
+        selectedMood = btn.dataset.mood;
+        // Enable submit button
+        document.getElementById('submitBtn').disabled = false;
+    });
+});
+
+// Submit button handler
+document.getElementById('submitBtn').addEventListener('click', () => {
+    if (selectedMood) {
+        showMoodResult(selectedMood);
+    }
+});
+
+function showMoodResult(mood) {
+    const tips = WELLNESS_TIPS[mood] || [];
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+    const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+    
+    // Set modal content
+    const emojiMap = {
+        'happy': '😊',
+        'sad': '💖',
+        'stressed': '🧘',
+        'tired': '☕',
+        'anxious': '🌸'
+    };
+    
+    const titleMap = {
+        'happy': "You're Feeling Happy!",
+        'sad': "It's Okay to Feel Sad 💙",
+        'stressed': "Let's Relax 🧘",
+        'tired': "Time to Recharge ☕",
+        'anxious': "You're Going to Be Okay 🌸"
+    };
+    
+    document.getElementById('modalEmoji').textContent = emojiMap[mood] || '💭';
+    document.getElementById('modalTitle').textContent = titleMap[mood] || "Your Mood";
+    document.getElementById('modalTip').textContent = randomTip || "Take care of yourself!";
+    document.getElementById('modalQuote').textContent = `"${randomQuote}"`;
+    
+    // Show modal
+    document.getElementById('moodModal').classList.add('show');
+    
+    // Save mood to localStorage for history
+    saveMoodToHistory(mood);
+}
+
+function closeMoodModal() {
+    document.getElementById('moodModal').classList.remove('show');
+    // Reset selection
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('submitBtn').disabled = true;
+    selectedMood = null;
+}
+
+function saveMoodToHistory(mood) {
+    let history = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+    const today = new Date().toLocaleDateString();
+    
+    history.unshift({ mood: mood, date: today });
+    history = history.slice(0, 5); // Keep only last 5
+    
+    localStorage.setItem('moodHistory', JSON.stringify(history));
+}
 </script>
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

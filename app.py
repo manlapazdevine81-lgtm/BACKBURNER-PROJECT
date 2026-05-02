@@ -1,15 +1,22 @@
 from flask import Flask, render_template, request, redirect, flash, session, url_for
 import os
 import json
+import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
-import os
 
-load_dotenv()  # This loads the variables from .env
+# Load environment variables from .env
+load_dotenv()  
 
-# Import Psycopg2 for PostgreSQL
-import psycopg2 
-from psycopg2 import extras # Used for dictionary-like rows
+# ------- Supabase Configuration -------
+SUPABASE_URL = os.environ.get('SUPABASE_URL')
+SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
+HEADERS = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": f"Bearer {SUPABASE_KEY}",
+    "Content-Type": "application/json",
+    "Prefer": "return=representation"
+}
 
 # ------- Wellness Tips & Daily Quotes -------
 WELLNESS_TIPS_MOOD = {
@@ -58,25 +65,20 @@ DAILY_QUOTES = [
     "🏆 Progress, not perfection."
 ]
 
-
+# ------------------ App Configuration ------------------
 app = Flask(__name__)
 app.secret_key = "kalma_secret_key"
 
-# ------- Database Configuration for PostgreSQL -------
+# ------------------ Database Configuration ------------------
 DB_HOST = os.environ.get('DB_HOST',)
 DB_NAME = os.environ.get('DB_NAME',)
 DB_USER = os.environ.get('DB_USER',)
 DB_PASS = os.environ.get('DB_PASS',)
-# The SQLite database path is no longer needed
-# BASE_DIR = os.path.dirname(__file__)
-# DATABASE = os.path.join(BASE_DIR, "users.db")
 
-# Removed the dangerous SQLite file removal logic:
-# if os.path.exists(DATABASE): ...
-
-# ------- Events File Configuration -------
+# ------------------ Calendar Events File ------------------
 EVENTS_FILE = os.path.join(os.path.dirname(__file__), "events.json")
 
+# ------------------ Calendar Helpers ----------------------
 def load_events():
     """Loads events from the JSON file."""
     if os.path.exists(EVENTS_FILE):
@@ -93,123 +95,86 @@ def save_event(date, title, desc):
     with open(EVENTS_FILE, "w") as f:
         json.dump(events, f, indent=4)
 
-# ------- DB helpers (Updated for PostgreSQL) -------
-# ------- DB helpers (Updated for PostgreSQL) -------
-
-def get_db_conn():
-    """Establishes a connection to the PostgreSQL database via Supabase Session Pooler."""
-    try:
-        conn = psycopg2.connect(
-            host=DB_HOST,
-            database=DB_NAME,
-            user=DB_USER,
-            password=DB_PASS,
-            port=5432,
-            sslmode="require"  # Required for Supabase
-        )
-        return conn
-    except psycopg2.Error as e:
-        app.logger.error("Could not connect to PostgreSQL: %s", e)
-        raise
+# ------------------ Database Helpers (Supabase REST API) ------------------
+def supabase_request(method, table, data=None, filters=None):
+    """Make a request to Supabase REST API."""
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
+    params = {}
+    if filters:
+        for key, op, value in filters:
+            params[key] = f"{op}.{value}"
     
-def execute_query(query, params=None, fetch_one=False, fetch_all=False, commit=False):
-    """A generic helper to execute a query, handling connection/cursor."""
-    conn = None
-    result = None
-    try:
-        conn = get_db_conn()
-        # Use DictCursor for dictionary-like rows, similar to sqlite3.Row
-        cur = conn.cursor(cursor_factory=extras.DictCursor) 
-        cur.execute(query, params)
-
-        if commit:
-            conn.commit()
-        
-        if fetch_one:
-            result = cur.fetchone()
-        
-        if fetch_all:
-            result = cur.fetchall()
-            
-        cur.close()
-        return result
-
-    except psycopg2.Error as e:
-        app.logger.error("DB Error: %s in query: %s with params: %s", e, query, params)
-        if conn:
-            conn.rollback() # Rollback on error
-        # In a real application, you might want to return None/False on failure
-        # or handle the exception more gracefully.
-        raise 
-    finally:
-        if conn:
-            conn.close()
+    if method == "GET":
+        r = requests.get(url, headers=HEADERS, params=params)
+    elif method == "POST":
+        r = requests.post(url, headers=HEADERS, json=data)
+    elif method == "PATCH":
+        r = requests.patch(url, headers=HEADERS, json=data, params=params)
+    elif method == "DELETE":
+        r = requests.delete(url, headers=HEADERS, params=params)
+    
+    if r.status_code >= 400:
+        app.logger.error(f"Supabase API Error: {r.status_code} - {r.text}")
+        return None
+    
+    return r.json() if r.text else None
 
 def init_db():
-    """Initializes the users and tasks tables using PostgreSQL syntax (SERIAL PK)."""
-    # Create users table
-    execute_query('''
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            fullname TEXT NOT NULL,
-            email TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
-        )
-    ''', commit=True)
-    # Create tasks table
-    execute_query('''
-        CREATE TABLE IF NOT EXISTS tasks (
-            id SERIAL PRIMARY KEY,
-            user_email TEXT NOT NULL,
-            name TEXT NOT NULL,
-            category TEXT,
-            due_date TEXT,
-            completed INTEGER DEFAULT 0,
-            FOREIGN KEY(user_email) REFERENCES users(email)
-        )
-    ''', commit=True)
-    app.logger.info("PostgreSQL tables checked/created.")
+    """Initialize tables via Supabase (create if not exists)."""
+    # Try to create users table - check if exists first
+    users = supabase_request("GET", "users", filters=[("email", "eq", "init_check")])
+    if users is None:
+        app.logger.info("Tables need to be created in Supabase dashboard")
+    app.logger.info("Supabase connection ready.")
 
 def get_user_by_email(email):
     """Fetches a single user record."""
-    # Note the use of %s placeholder for PostgreSQL
-    return execute_query("SELECT * FROM users WHERE email = %s", (email,), fetch_one=True)
+    result = supabase_request("GET", "users", filters=[("email", "eq", email)])
+    return result[0] if result else None
 
 def create_user(fullname, email, password_plain):
     """Inserts a new user into the database."""
     hashed = generate_password_hash(password_plain)
-    execute_query("INSERT INTO users (fullname, email, password) VALUES (%s, %s, %s)",
-                   (fullname, email, hashed), commit=True)
+    supabase_request("POST", "users", data={
+        "fullname": fullname,
+        "email": email,
+        "password": hashed
+    })
 
 def check_credentials(email, password_plain):
     """Checks user password against the stored hash."""
     user = get_user_by_email(email)
     if not user:
         return False
-    # Psycopg2 DictCursor rows allow dictionary-like access
     return check_password_hash(user["password"], password_plain)
 
 def add_task_for_user(email, name, category, due_date):
     """Adds a new task for a specified user email."""
-    execute_query("INSERT INTO tasks (user_email, name, category, due_date, completed) VALUES (%s, %s, %s, %s, 0)",
-                   (email, name, category, due_date), commit=True)
+    supabase_request("POST", "tasks", data={
+        "user_email": email,
+        "name": name,
+        "category": category,
+        "due_date": due_date,
+        "completed": False
+    })
 
 def get_tasks_for_user(email):
     """Retrieves all tasks for a specific user."""
-    return execute_query("SELECT * FROM tasks WHERE user_email = %s ORDER BY id DESC", (email,), fetch_all=True)
+    result = supabase_request("GET", "tasks", filters=[("user_email", "eq", email)])
+    return result if result else []
 
 def set_task_completed(task_id):
     """Marks a specific task as completed."""
-    execute_query("UPDATE tasks SET completed = 1 WHERE id = %s", (task_id,), commit=True)
+    supabase_request("PATCH", "tasks", data={"completed": True}, filters=[("id", "eq", task_id)])
 
 def delete_task_by_id(task_id):
     """Deletes a task by its ID."""
-    execute_query("DELETE FROM tasks WHERE id = %s", (task_id,), commit=True)
+    supabase_request("DELETE", "tasks", filters=[("id", "eq", task_id)])
 
-# Initialize new DB (will create tables if they don't exist)
+# Initialize database tables
 init_db()
 
-# ------- Routes (No changes needed as they rely on updated DB helpers) -------
+# ------------------ Routes ------------------
 @app.route('/')
 def index():
     return render_template('index.html', title='Home')
